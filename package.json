@@ -1,7 +1,7 @@
 {
   "name": "ze-challenge",
   "version": "1.0.0",
-  "description": "",
+  "description": "ze-challenge",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,6 +10,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "git-commit-msg-linter": "^3.2.6"
+    "@types/node": "^16.3.3",
+    "git-commit-msg-linter": "^3.2.6",
+    "typescript": "^4.3.5"
   }
 }
