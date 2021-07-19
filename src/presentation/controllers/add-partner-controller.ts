@@ -1,15 +1,13 @@
 import { MissingField } from './helpers/errors/missign-field'
-import { HttpRequest, HttpResponse } from './helpers/http'
+import { HttpRequest, HttpResponse } from './helpers/http/http'
+import { badRequest } from './helpers/http/http-response-status-code'
 
 export class AddPartnerController {
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     const fields: Array<string> = ['tradingName', 'ownerName', 'document', 'coverageArea', 'address']
     for (const field of fields) {
       if (!httpRequest.body[field]) {
-        return {
-          statusCode: 400,
-          body: new MissingField(field)
-        }
+        return badRequest(new MissingField(field))        
       }
     }
   }
