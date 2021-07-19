@@ -1,29 +1,36 @@
+import { HttpRequest, HttpResponse } from './helpers/http'
+
 export class AddPartnerController {
-  async handle(httpReques: any): Promise<any> {
-    if (!httpReques.body.tradingName) {
+  async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
+    if (!httpRequest.body.tradingName) {
       return {
-        statusCode: 400
+        statusCode: 400,
+        body: new Error('Missing param tradingName')
       }
     }
-    if (!httpReques.body.ownerName) {
+    if (!httpRequest.body.ownerName) {
       return {
-        statusCode: 400
+        statusCode: 400,
+        body: new Error('Missing param ownerName')
       }
     }
 
-    if (!httpReques.body.document) {
+    if (!httpRequest.body.document) {
       return {
-        statusCode: 400
+        statusCode: 400,
+        body: new Error('Missing param document')
       }
     }
-    if (!httpReques.body.coverageArea) {
+    if (!httpRequest.body.coverageArea) {
       return {
-        statusCode: 400
+        statusCode: 400,
+        body: new Error('Missing param coverageArea')
       }
     }
-    if (!httpReques.body.address) {
+    if (!httpRequest.body.address) {
       return {
-        statusCode: 400
+        statusCode: 400,
+        body: new Error('Missing param address')
       }
     }    
   }
