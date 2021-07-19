@@ -1,6 +1,30 @@
+import { PartnerModel } from '../../domain/models/partner-model'
+import { AddPartner } from '../../domain/use-cases/add-partner'
+import { AddPartnerModel } from '../../domain/use-cases/add-partner-model'
 import { AddPartnerController } from './add-partner-controller'
-import { InvalidField } from './helpers/errors/invalid-field'
-import { MissingField } from './helpers/errors/missign-field'
+import { Controller } from './controller'
+import { InvalidField, MissingField } from './helpers/errors'
+import { ServerError } from './helpers/errors/server-error'
+
+interface TestTypes {
+  addPartnerController: Controller
+  addPartnerStub: AddPartner
+}
+
+const addPartnerControllerSut = (): TestTypes => {
+  class AddPartnerStub implements AddPartner {
+    async add(partner: AddPartnerModel): Promise<PartnerModel> {
+      return Promise.resolve(null)
+    }
+  }
+  const addPartnerStub = new AddPartnerStub()
+
+  const addPartnerController = new AddPartnerController(addPartnerStub)
+  return {
+    addPartnerController: addPartnerController,
+    addPartnerStub: addPartnerStub
+  }
+}
 
 describe('Add partner controller', () => {
   test('Should return 400 when tradingName is no provided', async () => {
@@ -22,8 +46,8 @@ describe('Add partner controller', () => {
         }
       }
     }
-    const teste = new AddPartnerController()
-    const response = await teste.handle(httpRequestWithoutTradingName)
+    const { addPartnerController } = addPartnerControllerSut()
+    const response = await addPartnerController.handle(httpRequestWithoutTradingName)
     expect(response).toStrictEqual({ statusCode: 400, body: new MissingField('tradingName') })
   })
 
@@ -46,8 +70,8 @@ describe('Add partner controller', () => {
         }
       }
     }
-    const teste = new AddPartnerController()
-    const response = await teste.handle(httpRequestWithoutOwnerName)
+    const { addPartnerController } = addPartnerControllerSut()
+    const response = await addPartnerController.handle(httpRequestWithoutOwnerName)
     expect(response).toStrictEqual({ statusCode: 400, body: new MissingField('ownerName') })
   })
 
@@ -70,8 +94,8 @@ describe('Add partner controller', () => {
         }
       }
     }
-    const teste = new AddPartnerController()
-    const response = await teste.handle(httpRequestWithoutDocument)
+    const { addPartnerController } = addPartnerControllerSut()
+    const response = await addPartnerController.handle(httpRequestWithoutDocument)
     expect(response).toStrictEqual({ statusCode: 400, body: new MissingField('document') })
   })
 
@@ -88,8 +112,8 @@ describe('Add partner controller', () => {
         }
       }
     }
-    const teste = new AddPartnerController()
-    const response = await teste.handle(httpRequestWithoutCoverageArea)
+    const { addPartnerController } = addPartnerControllerSut()
+    const response = await addPartnerController.handle(httpRequestWithoutCoverageArea)
     expect(response).toStrictEqual({ statusCode: 400, body: new MissingField('coverageArea') })
   })
 
@@ -109,8 +133,8 @@ describe('Add partner controller', () => {
         }
       }
     }
-    const teste = new AddPartnerController()
-    const response = await teste.handle(httpRequestWithoutAddress)
+    const { addPartnerController } = addPartnerControllerSut()
+    const response = await addPartnerController.handle(httpRequestWithoutAddress)
     expect(response).toStrictEqual({ statusCode: 400, body: new MissingField('address') })
   })
 
@@ -134,8 +158,8 @@ describe('Add partner controller', () => {
       }
     }
 
-    const teste = new AddPartnerController()
-    const response = await teste.handle(httpRequestWithoutAddress)
+    const { addPartnerController } = addPartnerControllerSut()
+    const response = await addPartnerController.handle(httpRequestWithoutAddress)
     expect(response).toStrictEqual({ statusCode: 400, body: new MissingField('address.type') })
   })
 
@@ -159,8 +183,8 @@ describe('Add partner controller', () => {
       }
     }
 
-    const teste = new AddPartnerController()
-    const response = await teste.handle(httpRequestWithoutAddress)
+    const { addPartnerController } = addPartnerControllerSut()
+    const response = await addPartnerController.handle(httpRequestWithoutAddress)
     expect(response).toStrictEqual({ statusCode: 400, body: new MissingField('address.coordinates') })
   })
 
@@ -184,8 +208,8 @@ describe('Add partner controller', () => {
       }
     }
 
-    const teste = new AddPartnerController()
-    const response = await teste.handle(httpRequestWithoutAddress)
+    const { addPartnerController } = addPartnerControllerSut()
+    const response = await addPartnerController.handle(httpRequestWithoutAddress)
     expect(response).toStrictEqual({ statusCode: 400, body: new MissingField('coverageArea.type') })
   })
 
@@ -206,8 +230,8 @@ describe('Add partner controller', () => {
       }
     }
 
-    const teste = new AddPartnerController()
-    const response = await teste.handle(httpRequestWithoutAddress)
+    const { addPartnerController } = addPartnerControllerSut()
+    const response = await addPartnerController.handle(httpRequestWithoutAddress)
     expect(response).toStrictEqual({ statusCode: 400, body: new MissingField('coverageArea.coordinates') })
   })
 
@@ -232,8 +256,8 @@ describe('Add partner controller', () => {
       }
     }
 
-    const teste = new AddPartnerController()
-    const response = await teste.handle(httpRequestWithoutAddress)
+    const { addPartnerController } = addPartnerControllerSut()
+    const response = await addPartnerController.handle(httpRequestWithoutAddress)
     expect(response).toStrictEqual({ statusCode: 400, body: new InvalidField('coverageArea.type') })
   })
 
@@ -258,8 +282,60 @@ describe('Add partner controller', () => {
       }
     }
 
-    const teste = new AddPartnerController()
-    const response = await teste.handle(httpRequestWithoutAddress)
+    const { addPartnerController } = addPartnerControllerSut()
+    const response = await addPartnerController.handle(httpRequestWithoutAddress)
     expect(response).toStrictEqual({ statusCode: 400, body: new InvalidField('address.type') })
+  })
+
+  test('Should call add partner with correct values', async () => {
+    const httpRequest = {
+      body: {
+        tradingName: 'Adega da Cerveja - Pinheiros',
+        ownerName: 'Zé da Silva',
+        document: '1432132123891/0001',
+        coverageArea: {
+          type: 'MultiPolygon',
+          coordinates: [
+            [[[30, 20], [45, 40], [10, 40], [30, 20]]],
+            [[[15, 5], [40, 10], [10, 20], [5, 10], [15, 5]]]
+          ]
+        },
+        address: {
+          type: 'Point',
+          coordinates: [-46.57421, -21.785741]
+        }
+      }
+    }
+
+    const { addPartnerController, addPartnerStub } = addPartnerControllerSut()
+    const spyAddPartner = jest.spyOn(addPartnerStub, 'add')
+    await addPartnerController.handle(httpRequest)
+    expect(spyAddPartner).toHaveBeenCalledWith(httpRequest.body)
+  })
+
+  test('Should returns server error when add partner throws any error', async () => {
+    const httpRequest = {
+      body: {
+        tradingName: 'Adega da Cerveja - Pinheiros',
+        ownerName: 'Zé da Silva',
+        document: '1432132123891/0001',
+        coverageArea: {
+          type: 'MultiPolygon',
+          coordinates: [
+            [[[30, 20], [45, 40], [10, 40], [30, 20]]],
+            [[[15, 5], [40, 10], [10, 20], [5, 10], [15, 5]]]
+          ]
+        },
+        address: {
+          type: 'Point',
+          coordinates: [-46.57421, -21.785741]
+        }
+      }
+    }
+
+    const { addPartnerController, addPartnerStub } = addPartnerControllerSut()
+    jest.spyOn(addPartnerStub, 'add').mockRejectedValueOnce(new Error('any_error'))
+    const addPartnerResult = await addPartnerController.handle(httpRequest)
+    expect(addPartnerResult).toStrictEqual({ statusCode: 500, body: new ServerError() })
   })
 })
