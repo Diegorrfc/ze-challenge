@@ -15,7 +15,7 @@ const addPartnerControllerSut = (): TestTypes => {
   class AddPartnerStub implements AddPartner {
     async add(partner: AddPartnerModel): Promise<PartnerModel> {
       return Promise.resolve({
-        id: 1,
+        id: '1',
         tradingName: 'Adega da Cerveja - Pinheiros',
         ownerName: 'Zé da Silva',
         document: '1432132123891/0001',
@@ -118,7 +118,6 @@ describe('Add partner controller', () => {
   test('Should return 400 when coverageArea is no provided', async () => {
     const httpRequestWithoutCoverageArea = {
       body: {
-        id: 1,
         tradingName: 'Adega da Cerveja - Pinheiros',
         ownerName: 'Zé da Silva',
         document: '1432132123891/0001',
@@ -136,7 +135,6 @@ describe('Add partner controller', () => {
   test('Should return 400 when address is no provided', async () => {
     const httpRequestWithoutAddress = {
       body: {
-        id: 1,
         tradingName: 'Adega da Cerveja - Pinheiros',
         ownerName: 'Zé da Silva',
         document: '1432132123891/0001',
@@ -157,7 +155,6 @@ describe('Add partner controller', () => {
   test('Should return 400 if address type is no provided', async () => {
     const httpRequestWithoutAddress = {
       body: {
-        id: 1,
         tradingName: 'Adega da Cerveja - Pinheiros',
         ownerName: 'Zé da Silva',
         document: '1432132123891/0001',
@@ -182,7 +179,6 @@ describe('Add partner controller', () => {
   test('Should return 400 if address coordinates is no provided', async () => {
     const httpRequestWithoutAddress = {
       body: {
-        id: 1,
         tradingName: 'Adega da Cerveja - Pinheiros',
         ownerName: 'Zé da Silva',
         document: '1432132123891/0001',
@@ -207,7 +203,6 @@ describe('Add partner controller', () => {
   test('Should return 400 if coverageArea type is no provided', async () => {
     const httpRequestWithoutAddress = {
       body: {
-        id: 1,
         tradingName: 'Adega da Cerveja - Pinheiros',
         ownerName: 'Zé da Silva',
         document: '1432132123891/0001',
@@ -232,7 +227,6 @@ describe('Add partner controller', () => {
   test('Should return 400 if coverageArea coordinates is no provided', async () => {
     const httpRequestWithoutAddress = {
       body: {
-        id: 1,
         tradingName: 'Adega da Cerveja - Pinheiros',
         ownerName: 'Zé da Silva',
         document: '1432132123891/0001',
@@ -254,7 +248,6 @@ describe('Add partner controller', () => {
   test('Should return 400 if coverageArea type is invalid', async () => {
     const httpRequestWithoutAddress = {
       body: {
-        id: 1,
         tradingName: 'Adega da Cerveja - Pinheiros',
         ownerName: 'Zé da Silva',
         document: '1432132123891/0001',
@@ -280,7 +273,6 @@ describe('Add partner controller', () => {
   test('Should return 400 if address type is invalid', async () => {
     const httpRequestWithoutAddress = {
       body: {
-        id: 1,
         tradingName: 'Adega da Cerveja - Pinheiros',
         ownerName: 'Zé da Silva',
         document: '1432132123891/0001',
@@ -380,7 +372,7 @@ describe('Add partner controller', () => {
     expect(addPartnerResult).toStrictEqual({
       statusCode: 200,
       body: {
-        id: 1,
+        id: '1',
         tradingName: 'Adega da Cerveja - Pinheiros',
         ownerName: 'Zé da Silva',
         document: '1432132123891/0001',

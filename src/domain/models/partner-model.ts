@@ -1,5 +1,5 @@
 export interface PartnerModel {
-  id: number
+  id: string
   tradingName: string
   ownerName: string
   document: string
