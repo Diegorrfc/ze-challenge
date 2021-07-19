@@ -2,7 +2,7 @@ import { AddPartner } from '../../domain/use-cases/add-partner'
 import { Controller } from './controller'
 import { InvalidField, MissingField } from './helpers/errors'
 import { HttpRequest, HttpResponse } from './helpers/http/http'
-import { badRequest, serverError } from './helpers/http/http-response-status-code'
+import { badRequest, Ok, serverError } from './helpers/http/http-response-status-code'
 
 export class AddPartnerController implements Controller {
   private readonly addPartner: AddPartner
@@ -42,7 +42,7 @@ export class AddPartnerController implements Controller {
       }
       const { tradingName, ownerName, document, coverageArea, address } = httpRequest.body
 
-      await this.addPartner.add({
+      const partner = await this.addPartner.add({
         tradingName: tradingName,
         ownerName: ownerName,
         document: document,
@@ -55,6 +55,7 @@ export class AddPartnerController implements Controller {
           coordinates: address.coordinates
         }
       })
+      return Ok(partner)
     } catch (error) {
       return serverError()
     }

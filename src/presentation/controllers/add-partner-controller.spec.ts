@@ -14,7 +14,23 @@ interface TestTypes {
 const addPartnerControllerSut = (): TestTypes => {
   class AddPartnerStub implements AddPartner {
     async add(partner: AddPartnerModel): Promise<PartnerModel> {
-      return Promise.resolve(null)
+      return Promise.resolve({
+        id: 1,
+        tradingName: 'Adega da Cerveja - Pinheiros',
+        ownerName: 'Zé da Silva',
+        document: '1432132123891/0001',
+        coverageArea: {
+          type: 'MultiPolygon',
+          coordinates: [
+            [[[30, 20], [45, 40], [10, 40], [30, 20]]],
+            [[[15, 5], [40, 10], [10, 20], [5, 10], [15, 5]]]
+          ]
+        },
+        address: {
+          type: 'Point',
+          coordinates: [-46.57421, -21.785741]
+        }
+      })
     }
   }
   const addPartnerStub = new AddPartnerStub()
@@ -337,5 +353,49 @@ describe('Add partner controller', () => {
     jest.spyOn(addPartnerStub, 'add').mockRejectedValueOnce(new Error('any_error'))
     const addPartnerResult = await addPartnerController.handle(httpRequest)
     expect(addPartnerResult).toStrictEqual({ statusCode: 500, body: new ServerError() })
+  })
+
+  test('Should returns partner created', async () => {
+    const httpRequest = {
+      body: {
+        tradingName: 'Adega da Cerveja - Pinheiros',
+        ownerName: 'Zé da Silva',
+        document: '1432132123891/0001',
+        coverageArea: {
+          type: 'MultiPolygon',
+          coordinates: [
+            [[[30, 20], [45, 40], [10, 40], [30, 20]]],
+            [[[15, 5], [40, 10], [10, 20], [5, 10], [15, 5]]]
+          ]
+        },
+        address: {
+          type: 'Point',
+          coordinates: [-46.57421, -21.785741]
+        }
+      }
+    }
+
+    const { addPartnerController } = addPartnerControllerSut()
+    const addPartnerResult = await addPartnerController.handle(httpRequest)
+    expect(addPartnerResult).toStrictEqual({
+      statusCode: 200,
+      body: {
+        id: 1,
+        tradingName: 'Adega da Cerveja - Pinheiros',
+        ownerName: 'Zé da Silva',
+        document: '1432132123891/0001',
+        coverageArea: {
+          type: 'MultiPolygon',
+          coordinates: [
+            [[[30, 20], [45, 40], [10, 40], [30, 20]]],
+            [[[15, 5], [40, 10], [10, 20], [5, 10], [15, 5]]]
+          ]
+        },
+        address: {
+          type: 'Point',
+          coordinates: [-46.57421, -21.785741]
+        }
+      }
+    })
   })
 })
