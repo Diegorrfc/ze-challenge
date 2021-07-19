@@ -1,6 +1,5 @@
-export class InvalidField extends Error {  
+export class InvalidField extends Error {
   constructor(fieldName: string) {
-    super(`Invalid field: ${fieldName}`);
-
+    super(`Invalid field: ${fieldName}`)
   }
 }
