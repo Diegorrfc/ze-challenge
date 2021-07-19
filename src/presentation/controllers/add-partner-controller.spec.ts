@@ -1,4 +1,5 @@
 import { AddPartnerController } from './add-partner-controller';
+import { MissingField } from './helpers/errors/missign-field';
 
 describe('Add partner controller', () => {
   const httpRequest = {
@@ -40,7 +41,7 @@ describe('Add partner controller', () => {
     }
     const teste = new AddPartnerController();
     const response = await teste.handle(httpRequestWithoutTradingName)
-    expect(response).toStrictEqual({ statusCode: 400, body: new Error('Missing param tradingName') })
+    expect(response).toStrictEqual({ statusCode: 400, body: new MissingField('tradingName') })
   })
 
   test('Should return 400 when ownerName is no provided', async () => {
@@ -64,7 +65,7 @@ describe('Add partner controller', () => {
     }
     const teste = new AddPartnerController();
     const response = await teste.handle(httpRequestWithoutOwnerName)
-    expect(response).toStrictEqual({ statusCode: 400, body: new Error('Missing param ownerName') })
+    expect(response).toStrictEqual({ statusCode: 400, body: new MissingField('ownerName') })
   })
 
   test('Should return 400 when document is no provided', async () => {
@@ -88,7 +89,7 @@ describe('Add partner controller', () => {
     }
     const teste = new AddPartnerController();
     const response = await teste.handle(httpRequestWithoutDocument)
-    expect(response).toStrictEqual({ statusCode: 400, body: new Error('Missing param document') })
+    expect(response).toStrictEqual({ statusCode: 400, body: new MissingField('document') })
   })
 
   test('Should return 400 when coverageArea is no provided', async () => {
@@ -106,7 +107,7 @@ describe('Add partner controller', () => {
     }
     const teste = new AddPartnerController();
     const response = await teste.handle(httpRequestWithoutCoverageArea)
-    expect(response).toStrictEqual({ statusCode: 400, body: new Error('Missing param coverageArea') })
+    expect(response).toStrictEqual({ statusCode: 400, body: new MissingField('coverageArea') })
   })
 
   test('Should return 400 when address is no provided', async () => {
@@ -127,6 +128,6 @@ describe('Add partner controller', () => {
     }
     const teste = new AddPartnerController();
     const response = await teste.handle(httpRequestWithoutAddress)
-    expect(response).toStrictEqual({ statusCode: 400, body: new Error('Missing param address') })
+    expect(response).toStrictEqual({ statusCode: 400, body: new MissingField('address') })
   })
 })
