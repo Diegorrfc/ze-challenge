@@ -1,7 +1,14 @@
 import { PartnerModel } from '../../models/partner-model'
 import { AddPartnerModel } from '../../use-cases/add-partner-model'
 import { AddPartnerRepository } from '../db-interfaces/add-partner-repository'
-import { DbAddPartner } from './db-add-partner'
+import { HasPartnerByDocumentRepository } from '../db-interfaces/has-partner-by-document-repository'
+import { DbPartner } from './db-partner'
+
+interface TypesSut {
+  dbPartner: DbPartner
+  addPartnerRepository: AddPartnerRepository
+  hasPartnerByDocumentRepository: HasPartnerByDocumentRepository
+}
 
 const partnerToAdd =
 {
@@ -46,19 +53,42 @@ const makeAddPartnerRepositoryStub = (): AddPartnerRepository => {
   return new AddPartnerRepositoryStub()
 }
 
+const makeHasPartnerByDocumentRepositoryStub = (): HasPartnerByDocumentRepository => {
+  class HasPartnerByDocumentRepositoryStub implements HasPartnerByDocumentRepository {
+    async hasPartnerByDocument(documentNumber: string): Promise<boolean> {
+      return Promise.resolve(true)
+    }
+  }
+  return new HasPartnerByDocumentRepositoryStub()
+}
+
+const makeDbPartnerSut = (): TypesSut => {
+  const addPartnerRepository = makeAddPartnerRepositoryStub()
+  const hasPartnerByDocumentRepositoryStub = makeHasPartnerByDocumentRepositoryStub()
+  const db = new DbPartner(addPartnerRepository, hasPartnerByDocumentRepositoryStub)
+
+  return {
+    dbPartner: db,
+    addPartnerRepository: addPartnerRepository,
+    hasPartnerByDocumentRepository: hasPartnerByDocumentRepositoryStub
+  }
+}
+
 describe('Db Add Partner Db', () => {
   test('Should call MongoRespository add with correct values', async () => {
-    const mongoRespositoryAdapter = makeAddPartnerRepositoryStub()
-    const spyMongoRespositoryAdapter = jest.spyOn(mongoRespositoryAdapter, 'add')
-    const dbRepository = new DbAddPartner(mongoRespositoryAdapter)
-    await dbRepository.add(partnerToAdd)
+    const { dbPartner, addPartnerRepository } = makeDbPartnerSut()
+    const spyMongoRespositoryAdapter = jest.spyOn(addPartnerRepository, 'add')
+
+    await dbPartner.add(partnerToAdd)
+
     expect(spyMongoRespositoryAdapter).toHaveBeenCalledWith(partnerToAdd)
   })
 
   test('Should call return partner with success', async () => {
-    const mongoRespositoryAdapter = makeAddPartnerRepositoryStub()
-    const dbRepository = new DbAddPartner(mongoRespositoryAdapter)
-    const partner = await dbRepository.add(partnerToAdd)
+    const { dbPartner } = makeDbPartnerSut()
+
+    const partner = await dbPartner.add(partnerToAdd)
+
     expect(partner).toStrictEqual({
       id: '1',
       tradingName: 'Adega da Cerveja - Pinheiros',
@@ -79,10 +109,10 @@ describe('Db Add Partner Db', () => {
   })
 
   test('Should throws error when add partner throws error', async () => {
-    const mongoRespositoryAdapter = makeAddPartnerRepositoryStub()
-    jest.spyOn(mongoRespositoryAdapter, 'add').mockRejectedValueOnce(new Error('any_error'))
-    const dbRepository = new DbAddPartner(mongoRespositoryAdapter)
-    const partner = dbRepository.add(partnerToAdd)
+    const { dbPartner, addPartnerRepository } = makeDbPartnerSut()
+    jest.spyOn(addPartnerRepository, 'add').mockRejectedValueOnce(new Error('any_error'))
+
+    const partner = dbPartner.add(partnerToAdd)
     await expect(partner).rejects.toThrow()
   })
 })

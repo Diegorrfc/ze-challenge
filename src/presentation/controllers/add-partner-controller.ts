@@ -1,5 +1,7 @@
 import { AddPartner } from '../../domain/use-cases/add-partner'
+import { HasPartnerByDocument } from '../../domain/use-cases/has-partner-by-document'
 import { Controller } from './controller'
+import { PartnerAlreadyExists } from './helpers/errors/partner-already-exists'
 import { HttpRequest, HttpResponse } from './helpers/http/http'
 import { badRequest, Ok, serverError } from './helpers/http/http-response-status-code'
 import { ComponentValidation } from './helpers/validators/component-validation'
@@ -7,10 +9,12 @@ import { ComponentValidation } from './helpers/validators/component-validation'
 export class AddPartnerController implements Controller {
   private readonly addPartner: AddPartner
   private readonly componentValidation: ComponentValidation
+  private readonly hasPartnerByDocument: HasPartnerByDocument
 
-  constructor(addPartner: AddPartner, componentValidation: ComponentValidation) {
+  constructor(addPartner: AddPartner, componentValidation: ComponentValidation, hasPartnerByDocument: HasPartnerByDocument) {
     this.addPartner = addPartner
     this.componentValidation = componentValidation
+    this.hasPartnerByDocument = hasPartnerByDocument
   }
 
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
@@ -19,8 +23,12 @@ export class AddPartnerController implements Controller {
       if (error) {
         return badRequest(error)
       }
-
       const { tradingName, ownerName, document, coverageArea, address } = httpRequest.body
+
+      const hasPartner = await this.hasPartnerByDocument.hasPartnerByDocument(document)
+      if (hasPartner) {
+        return badRequest(new PartnerAlreadyExists())
+      }
 
       const partner = await this.addPartner.add({
         tradingName: tradingName,

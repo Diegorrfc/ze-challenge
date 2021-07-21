@@ -1,9 +1,11 @@
 import { PartnerModel } from '../../domain/models/partner-model'
 import { AddPartner } from '../../domain/use-cases/add-partner'
 import { AddPartnerModel } from '../../domain/use-cases/add-partner-model'
+import { HasPartnerByDocument } from '../../domain/use-cases/has-partner-by-document'
 import { AddPartnerController } from './add-partner-controller'
 import { Controller } from './controller'
 import { MissingField } from './helpers/errors'
+import { PartnerAlreadyExists } from './helpers/errors/partner-already-exists'
 import { ServerError } from './helpers/errors/server-error'
 import { ComponentValidation } from './helpers/validators/component-validation'
 
@@ -11,6 +13,7 @@ interface TestTypes {
   addPartnerController: Controller
   addPartnerStub: AddPartner
   componentValidation: ComponentValidation
+  hasPartnerByDocument: HasPartnerByDocument
 }
 
 const makeCompositValidation = (): ComponentValidation => {
@@ -47,15 +50,26 @@ const makeAddPartnerStub = (): AddPartner => {
   return new AddPartnerStub()
 }
 
+const makeHasPartnerByDocumentStub = (): HasPartnerByDocument => {
+  class HasPartnerByDocumentStup implements HasPartnerByDocument {
+    async hasPartnerByDocument(documentNumber: string): Promise<boolean> {
+      return Promise.resolve(false)
+    }
+  }
+  return new HasPartnerByDocumentStup()
+}
+
 const addPartnerControllerSut = (): TestTypes => {
   const addPartnerStub = makeAddPartnerStub()
   const compositValidation = makeCompositValidation()
-  const addPartnerController = new AddPartnerController(addPartnerStub, compositValidation)
+  const hasPartnerByDocumentStub = makeHasPartnerByDocumentStub()
+  const addPartnerController = new AddPartnerController(addPartnerStub, compositValidation, hasPartnerByDocumentStub)
 
   return {
     addPartnerController: addPartnerController,
     addPartnerStub: addPartnerStub,
-    componentValidation: compositValidation
+    componentValidation: compositValidation,
+    hasPartnerByDocument: hasPartnerByDocumentStub
   }
 }
 
@@ -181,5 +195,32 @@ describe('Add partner controller', () => {
         }
       }
     })
+  })
+
+  test('Should return badRequest if document already exists', async () => {
+    const httpRequestWithoutAddress = {
+      body: {
+        tradingName: 'Adega da Cerveja - Pinheiros',
+        ownerName: 'Zé da Silva',
+        document: '1432132123891/0001',
+        coverageArea: {
+          type: 'coverageArea invalid',
+          coordinates: [
+            [[[30, 20], [45, 40], [10, 40], [30, 20]]],
+            [[[15, 5], [40, 10], [10, 20], [5, 10], [15, 5]]]
+          ]
+        },
+        address: {
+          type: 'Point',
+          coordinates: [-46.57421, -21.785741]
+        }
+      }
+    }
+
+    const { addPartnerController, hasPartnerByDocument } = addPartnerControllerSut()
+    jest.spyOn(hasPartnerByDocument, 'hasPartnerByDocument').mockResolvedValueOnce(true)
+
+    const response = await addPartnerController.handle(httpRequestWithoutAddress)
+    expect(response).toStrictEqual({ statusCode: 400, body: new PartnerAlreadyExists() })
   })
 })

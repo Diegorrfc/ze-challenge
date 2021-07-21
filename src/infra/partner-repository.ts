@@ -1,9 +1,10 @@
-import { AddPartnerRepository } from '../data/db-interfaces/add-partner-repository'
-import { PartnerModel } from '../models/partner-model'
-import { AddPartnerModel } from '../use-cases/add-partner-model'
+import { AddPartnerRepository } from '../domain/data/db-interfaces/add-partner-repository'
+import { HasPartnerByDocumentRepository } from '../domain/data/db-interfaces/has-partner-by-document-repository'
+import { PartnerModel } from '../domain/models/partner-model'
+import { AddPartnerModel } from '../domain/use-cases/add-partner-model'
 import { MongoHelper } from './mongodb/helpers/mongo-helper'
 
-export class PartnerRepository implements AddPartnerRepository {
+export class PartnerRepository implements AddPartnerRepository, HasPartnerByDocumentRepository {
   async add(partnerModel: AddPartnerModel): Promise<PartnerModel> {
     const accountCollection = await MongoHelper.getCollection('partners')
     const accountResult = await accountCollection.insertOne(partnerModel)
@@ -22,5 +23,11 @@ export class PartnerRepository implements AddPartnerRepository {
         coordinates: partnerModel.address.coordinates
       }
     }
+  }
+
+  async hasPartnerByDocument(documentNumber: string): Promise<boolean> {
+    const accountCollection = await MongoHelper.getCollection('partners')
+    const hasPartner = await accountCollection.findOne({ document: documentNumber })
+    return !!hasPartner
   }
 }
