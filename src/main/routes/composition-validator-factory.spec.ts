@@ -3,6 +3,7 @@ import { ComponentValidation } from '../../presentation/controllers/helpers/vali
 import { CompositeBodyRequiredField } from '../../presentation/controllers/helpers/validators/composite-required-field'
 import { componentValidationFactory } from './composition-validator'
 import { CompositeCoverageAreaValidator } from '../../presentation/controllers/helpers/validators/composite-coverage-area-validator'
+import { CompositeAddressValidator } from '../../presentation/controllers/helpers/validators/composite-address-validator'
 jest.mock('../../presentation/controllers/helpers/validators/composite-validator')
 
 describe('componentValidationFactory', () => {
@@ -13,6 +14,9 @@ describe('componentValidationFactory', () => {
 
     const coverageAreaValidator = new CompositeCoverageAreaValidator()
     componetsValidation.push(coverageAreaValidator)
+
+    const addressValidator = new CompositeAddressValidator()
+    componetsValidation.push(addressValidator)
 
     componentValidationFactory()
 

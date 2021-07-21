@@ -1,4 +1,4 @@
-import { InvalidField } from '../errors'
+import { InvalidField, MissingField } from '../errors'
 import { CompositeCoverageAreaValidator } from './composite-coverage-area-validator'
 
 describe('CompositeCoverageAreaValidator', () => {
@@ -28,5 +28,28 @@ describe('CompositeCoverageAreaValidator', () => {
       }
     })
     expect(validatorresult).toEqual(new InvalidField('coverageArea.type'))
+  })
+
+  test('Should return error when coverageArea type is no provided', () => {
+    const coverageAreaValidator = new CompositeCoverageAreaValidator()
+    const validatorresult = coverageAreaValidator.validate({
+      coverageArea: {
+        coordinates: [
+          [[[30, 20], [45, 40], [10, 40], [30, 20]]],
+          [[[15, 5], [40, 10], [10, 20], [5, 10], [15, 5]]]
+        ]
+      }
+    })
+    expect(validatorresult).toEqual(new MissingField('coverageArea.type'))
+  })
+
+  test('Should return error when coverageArea coordinates is no provided', () => {
+    const coverageAreaValidator = new CompositeCoverageAreaValidator()
+    const validatorresult = coverageAreaValidator.validate({
+      coverageArea: {
+        type: 'MultiPolygon'
+      }
+    })
+    expect(validatorresult).toEqual(new MissingField('coverageArea.coordinates'))
   })
 })
