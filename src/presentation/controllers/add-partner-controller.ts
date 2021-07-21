@@ -20,16 +20,6 @@ export class AddPartnerController implements Controller {
         return badRequest(error)
       }
 
-      // if (!httpRequest.body.address.type) {
-      //   return badRequest(new MissingField('address.type'))
-      // }
-      // if (!httpRequest.body.address.coordinates) {
-      //   return badRequest(new MissingField('address.coordinates'))
-      // }
-
-      // if (httpRequest.body.address.type !== 'Point') {
-      //   return badRequest(new InvalidField('address.type'))
-      // }
       const { tradingName, ownerName, document, coverageArea, address } = httpRequest.body
 
       const partner = await this.addPartner.add({
