@@ -3,7 +3,7 @@ import { AddPartner } from '../../domain/use-cases/add-partner'
 import { AddPartnerModel } from '../../domain/use-cases/add-partner-model'
 import { AddPartnerController } from './add-partner-controller'
 import { Controller } from './controller'
-import { InvalidField, MissingField } from './helpers/errors'
+import { MissingField } from './helpers/errors'
 import { ServerError } from './helpers/errors/server-error'
 import { ComponentValidation } from './helpers/validators/component-validation'
 
@@ -60,79 +60,6 @@ const addPartnerControllerSut = (): TestTypes => {
 }
 
 describe('Add partner controller', () => {
-  test('Should return 400 if address type is no provided', async () => {
-    const httpRequestWithoutAddress = {
-      body: {
-        tradingName: 'Adega da Cerveja - Pinheiros',
-        ownerName: 'Zé da Silva',
-        document: '1432132123891/0001',
-        coverageArea: {
-          type: 'MultiPolygon',
-          coordinates: [
-            [[[30, 20], [45, 40], [10, 40], [30, 20]]],
-            [[[15, 5], [40, 10], [10, 20], [5, 10], [15, 5]]]
-          ]
-        },
-        address: {
-          coordinates: [-46.57421, -21.785741]
-        }
-      }
-    }
-
-    const { addPartnerController } = addPartnerControllerSut()
-    const response = await addPartnerController.handle(httpRequestWithoutAddress)
-    expect(response).toStrictEqual({ statusCode: 400, body: new MissingField('address.type') })
-  })
-
-  test('Should return 400 if address coordinates is no provided', async () => {
-    const httpRequestWithoutAddress = {
-      body: {
-        tradingName: 'Adega da Cerveja - Pinheiros',
-        ownerName: 'Zé da Silva',
-        document: '1432132123891/0001',
-        coverageArea: {
-          type: 'MultiPolygon',
-          coordinates: [
-            [[[30, 20], [45, 40], [10, 40], [30, 20]]],
-            [[[15, 5], [40, 10], [10, 20], [5, 10], [15, 5]]]
-          ]
-        },
-        address: {
-          type: 'Point'
-        }
-      }
-    }
-
-    const { addPartnerController } = addPartnerControllerSut()
-    const response = await addPartnerController.handle(httpRequestWithoutAddress)
-    expect(response).toStrictEqual({ statusCode: 400, body: new MissingField('address.coordinates') })
-  })
-
-  test('Should return 400 if address type is invalid', async () => {
-    const httpRequestWithoutAddress = {
-      body: {
-        tradingName: 'Adega da Cerveja - Pinheiros',
-        ownerName: 'Zé da Silva',
-        document: '1432132123891/0001',
-        coverageArea: {
-          type: 'MultiPolygon',
-          coordinates: [
-            [[[30, 20], [45, 40], [10, 40], [30, 20]]],
-            [[[15, 5], [40, 10], [10, 20], [5, 10], [15, 5]]]
-          ]
-        },
-        address: {
-          type: 'address type invalid',
-          coordinates: [-46.57421, -21.785741]
-        }
-      }
-    }
-
-    const { addPartnerController } = addPartnerControllerSut()
-    const response = await addPartnerController.handle(httpRequestWithoutAddress)
-    expect(response).toStrictEqual({ statusCode: 400, body: new InvalidField('address.type') })
-  })
-
   test('Should return badRequest if componentValidation validate return error', async () => {
     const httpRequestWithoutAddress = {
       body: {

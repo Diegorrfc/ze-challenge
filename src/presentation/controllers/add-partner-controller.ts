@@ -1,6 +1,5 @@
 import { AddPartner } from '../../domain/use-cases/add-partner'
 import { Controller } from './controller'
-import { InvalidField, MissingField } from './helpers/errors'
 import { HttpRequest, HttpResponse } from './helpers/http/http'
 import { badRequest, Ok, serverError } from './helpers/http/http-response-status-code'
 import { ComponentValidation } from './helpers/validators/component-validation'
@@ -21,16 +20,16 @@ export class AddPartnerController implements Controller {
         return badRequest(error)
       }
 
-      if (!httpRequest.body.address.type) {
-        return badRequest(new MissingField('address.type'))
-      }
-      if (!httpRequest.body.address.coordinates) {
-        return badRequest(new MissingField('address.coordinates'))
-      }
+      // if (!httpRequest.body.address.type) {
+      //   return badRequest(new MissingField('address.type'))
+      // }
+      // if (!httpRequest.body.address.coordinates) {
+      //   return badRequest(new MissingField('address.coordinates'))
+      // }
 
-      if (httpRequest.body.address.type !== 'Point') {
-        return badRequest(new InvalidField('address.type'))
-      }
+      // if (httpRequest.body.address.type !== 'Point') {
+      //   return badRequest(new InvalidField('address.type'))
+      // }
       const { tradingName, ownerName, document, coverageArea, address } = httpRequest.body
 
       const partner = await this.addPartner.add({

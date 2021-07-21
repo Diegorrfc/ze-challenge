@@ -9,7 +9,6 @@ export const routeAdapter = (controller: Controller) => {
     }
     const response = await controller.handle(httpRequest)
     const body = response.statusCode !== 200 ? { message: response.body.message } : response.body
-    res.json(body)
-    res.status(response.statusCode)
+    res.status(response.statusCode).send(body)
   }
 }
