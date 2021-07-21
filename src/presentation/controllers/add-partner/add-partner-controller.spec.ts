@@ -1,13 +1,13 @@
-import { PartnerModel } from '../../domain/models/partner-model'
-import { AddPartner } from '../../domain/use-cases/add-partner'
-import { AddPartnerModel } from '../../domain/use-cases/add-partner-model'
-import { HasPartnerByDocument } from '../../domain/use-cases/has-partner-by-document'
+import { PartnerModel } from '../../../domain/models/partner-model'
+import { AddPartner } from '../../../domain/use-cases/add-partner'
+import { AddPartnerModel } from '../../../domain/use-cases/add-partner-model'
+import { HasPartnerByDocument } from '../../../domain/use-cases/has-partner-by-document'
 import { AddPartnerController } from './add-partner-controller'
-import { Controller } from './controller'
-import { MissingField } from './helpers/errors'
-import { PartnerAlreadyExists } from './helpers/errors/partner-already-exists'
-import { ServerError } from './helpers/errors/server-error'
-import { ComponentValidation } from './helpers/validators/component-validation'
+import { Controller } from '../controller'
+import { MissingField } from '../helpers/errors'
+import { PartnerAlreadyExists } from '../helpers/errors/partner-already-exists'
+import { ServerError } from '../helpers/errors/server-error'
+import { ComponentValidation } from '../helpers/validators/component-validation'
 
 interface TestTypes {
   addPartnerController: Controller

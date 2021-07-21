@@ -1,6 +1,6 @@
 import { Controller } from '../../presentation/controllers/controller'
 import { HttpRequest, HttpResponse } from '../../presentation/controllers/helpers/http/http'
-import { routeAdapter } from './request-response-express-adapter'
+import { routeAdapter } from './router-adapter'
 import request from 'supertest'
 import app from '../config/app'
 import { badRequest, serverError } from '../../presentation/controllers/helpers/http/http-response-status-code'

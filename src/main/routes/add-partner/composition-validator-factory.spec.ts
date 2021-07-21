@@ -1,10 +1,11 @@
-import { CompositeValidator } from '../../presentation/controllers/helpers/validators/composite-validator'
-import { ComponentValidation } from '../../presentation/controllers/helpers/validators/component-validation'
-import { CompositeBodyRequiredField } from '../../presentation/controllers/helpers/validators/composite-required-field'
+import { ComponentValidation } from '../../../presentation/controllers/helpers/validators/component-validation'
+import { CompositeAddressValidator } from '../../../presentation/controllers/helpers/validators/composite-address-validator'
+import { CompositeCoverageAreaValidator } from '../../../presentation/controllers/helpers/validators/composite-coverage-area-validator'
+import { CompositeBodyRequiredField } from '../../../presentation/controllers/helpers/validators/composite-required-field'
+import { CompositeValidator } from '../../../presentation/controllers/helpers/validators/composite-validator'
 import { componentValidationFactory } from './composition-validator'
-import { CompositeCoverageAreaValidator } from '../../presentation/controllers/helpers/validators/composite-coverage-area-validator'
-import { CompositeAddressValidator } from '../../presentation/controllers/helpers/validators/composite-address-validator'
-jest.mock('../../presentation/controllers/helpers/validators/composite-validator')
+
+jest.mock('../../../presentation/controllers/helpers/validators/composite-validator')
 
 describe('componentValidationFactory', () => {
   test('Should call CompositeValidator with correct validations', () => {

@@ -1,7 +1,7 @@
-import { DbPartner } from '../../domain/data/usecases/db-partner'
-import { PartnerRepository } from '../../infra/partner-repository'
-import { AddPartnerController } from '../../presentation/controllers/add-partner-controller'
-import { Controller } from '../../presentation/controllers/controller'
+import { DbPartner } from '../../../domain/data/usecases/db-partner'
+import { PartnerRepository } from '../../../infra/partner-repository'
+import { AddPartnerController } from '../../../presentation/controllers/add-partner/add-partner-controller'
+import { Controller } from '../../../presentation/controllers/controller'
 import { componentValidationFactory } from './composition-validator'
 
 export const addPartnerControllerComposition = (): Controller => {

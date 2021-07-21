@@ -1,10 +1,10 @@
-import { AddPartner } from '../../domain/use-cases/add-partner'
-import { HasPartnerByDocument } from '../../domain/use-cases/has-partner-by-document'
-import { Controller } from './controller'
-import { PartnerAlreadyExists } from './helpers/errors/partner-already-exists'
-import { HttpRequest, HttpResponse } from './helpers/http/http'
-import { badRequest, Ok, serverError } from './helpers/http/http-response-status-code'
-import { ComponentValidation } from './helpers/validators/component-validation'
+import { AddPartner } from '../../../domain/use-cases/add-partner'
+import { HasPartnerByDocument } from '../../../domain/use-cases/has-partner-by-document'
+import { Controller } from '../controller'
+import { PartnerAlreadyExists } from '../helpers/errors/partner-already-exists'
+import { HttpRequest, HttpResponse } from '../helpers/http/http'
+import { badRequest, Ok, serverError } from '../helpers/http/http-response-status-code'
+import { ComponentValidation } from '../helpers/validators/component-validation'
 
 export class AddPartnerController implements Controller {
   private readonly addPartner: AddPartner
