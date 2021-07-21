@@ -1,9 +1,8 @@
 import { Router, Express } from 'express'
+import addPartner from '../routes/add-partner-router'
 
 export default (app: Express): void => {
   const route = Router()
   app.use(route)
-  route.get('/teste', (req, res) => {
-    res.json({ aqui: 'ui' })
-  })
+  addPartner(route)
 }

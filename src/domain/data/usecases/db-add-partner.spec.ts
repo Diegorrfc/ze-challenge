@@ -1,5 +1,5 @@
-import { PartnerModel } from '../../domain/models/partner-model'
-import { AddPartnerModel } from '../../domain/use-cases/add-partner-model'
+import { PartnerModel } from '../../models/partner-model'
+import { AddPartnerModel } from '../../use-cases/add-partner-model'
 import { AddPartnerRepository } from '../db-interfaces/add-partner-repository'
 import { DbAddPartner } from './db-add-partner'
 

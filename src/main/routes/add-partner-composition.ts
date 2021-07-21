@@ -1,5 +1,5 @@
-import { DbAddPartner } from '../../data/usecases/db-add-partner'
-import { PartnerRepository } from '../../infra/partner-repository'
+import { DbAddPartner } from '../../domain/data/usecases/db-add-partner'
+import { PartnerRepository } from '../../domain/infra/partner-repository'
 import { AddPartnerController } from '../../presentation/controllers/add-partner-controller'
 import { Controller } from '../../presentation/controllers/controller'
 

@@ -1,5 +1,6 @@
-import express from 'express'
-import route from '../main/config/routes'
-const app = express()
-app.listen(5050, () => console.log('app'))
-route(app)
+import app from './config/app'
+import { MongoHelper } from '../domain/infra/mongodb/helpers/mongo-helper'
+
+MongoHelper.connect('mongodb://localhost:27017/clean-node-api').then(() => {
+  app.listen(5050, () => console.log('server running'))
+})
