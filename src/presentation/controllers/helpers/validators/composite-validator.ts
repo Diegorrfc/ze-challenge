@@ -7,12 +7,13 @@ export class CompositeValidator implements ComponentValidation {
     this.components = componets
   }
 
-  validate(request: any): Error {
+  validate(request: any): Error | null {
     for (const component of this.components) {
       const validateResult = component.validate(request)
       if (validateResult) {
-        return new Error()
+        return validateResult
       }
     }
+    return null
   }
 }

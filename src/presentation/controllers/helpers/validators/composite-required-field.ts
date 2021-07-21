@@ -7,9 +7,10 @@ export class CompositeBodyRequiredField implements ComponentValidation {
     this.fieldName = fieldName
   }
 
-  validate(request: any): Error {
+  validate(request: any): Error | null {
     if (!request[this.fieldName]) {
       return new MissingField(this.fieldName)
     }
+    return null
   }
 }

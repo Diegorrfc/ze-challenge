@@ -1,3 +1,3 @@
 export interface ComponentValidation {
-  validate(request: any): Error
+  validate(request: any): Error | null
 }
