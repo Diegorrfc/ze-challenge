@@ -1,4 +1,4 @@
-import { MissingField } from '../errors'
+import { MissingField } from '../../errors'
 import { CompositeBodyRequiredField } from './composite-required-field'
 
 describe('CompositeBodyRequiredField', () => {

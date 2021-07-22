@@ -1,78 +1,4 @@
-import { PartnerModel } from '../../models/partner-model'
-import { AddPartnerModel } from '../../use-cases/add-partner-model'
-import { AddPartnerRepository } from '../db-interfaces/add-partner-repository'
-import { HasPartnerByDocumentRepository } from '../db-interfaces/has-partner-by-document-repository'
-import { DbPartner } from './db-partner'
-
-interface TypesSut {
-  dbPartner: DbPartner
-  addPartnerRepository: AddPartnerRepository
-  hasPartnerByDocumentRepository: HasPartnerByDocumentRepository
-}
-
-const partnerToAdd =
-{
-  tradingName: 'Adega da Cerveja - Pinheiros',
-  ownerName: 'Zé da Silva',
-  document: '1432132123891/0001',
-  coverageArea: {
-    type: 'MultiPolygon',
-    coordinates: [
-      [[[30, 20], [45, 40], [10, 40], [30, 20]]],
-      [[[15, 5], [40, 10], [10, 20], [5, 10], [15, 5]]]
-    ]
-  },
-  address: {
-    type: 'Point',
-    coordinates: [-46.57421, -21.785741]
-  }
-}
-
-const makeAddPartnerRepositoryStub = (): AddPartnerRepository => {
-  class AddPartnerRepositoryStub implements AddPartnerRepository {
-    async add(partnerModel: AddPartnerModel): Promise<PartnerModel> {
-      return Promise.resolve({
-        id: '1',
-        tradingName: 'Adega da Cerveja - Pinheiros',
-        ownerName: 'Zé da Silva',
-        document: '1432132123891/0001',
-        coverageArea: {
-          type: 'MultiPolygon',
-          coordinates: [
-            [[[30, 20], [45, 40], [10, 40], [30, 20]]],
-            [[[15, 5], [40, 10], [10, 20], [5, 10], [15, 5]]]
-          ]
-        },
-        address: {
-          type: 'Point',
-          coordinates: [-46.57421, -21.785741]
-        }
-      })
-    }
-  }
-  return new AddPartnerRepositoryStub()
-}
-
-const makeHasPartnerByDocumentRepositoryStub = (): HasPartnerByDocumentRepository => {
-  class HasPartnerByDocumentRepositoryStub implements HasPartnerByDocumentRepository {
-    async hasPartnerByDocument(documentNumber: string): Promise<boolean> {
-      return Promise.resolve(true)
-    }
-  }
-  return new HasPartnerByDocumentRepositoryStub()
-}
-
-const makeDbPartnerSut = (): TypesSut => {
-  const addPartnerRepository = makeAddPartnerRepositoryStub()
-  const hasPartnerByDocumentRepositoryStub = makeHasPartnerByDocumentRepositoryStub()
-  const db = new DbPartner(addPartnerRepository, hasPartnerByDocumentRepositoryStub)
-
-  return {
-    dbPartner: db,
-    addPartnerRepository: addPartnerRepository,
-    hasPartnerByDocumentRepository: hasPartnerByDocumentRepositoryStub
-  }
-}
+import { makeDbPartnerSut, partnerToAdd } from './db-partner-test-fixures'
 
 describe('Db Partner', () => {
   describe('Add partner', () => {
@@ -142,6 +68,53 @@ describe('Db Partner', () => {
 
       jest.spyOn(hasPartnerByDocumentRepository, 'hasPartnerByDocument').mockRejectedValueOnce(new Error())
       const result = dbPartner.hasPartnerByDocument(documentNumber)
+
+      await expect(result).rejects.toThrow()
+    })
+  })
+
+  describe('findPartnerById', () => {
+    const partnerId = '123456'
+    test('Should return partner with success', async () => {
+      const { dbPartner } = makeDbPartnerSut()
+
+      const result = await dbPartner.findPartnerById(partnerId)
+
+      expect(result).toStrictEqual(
+        {
+          id: '1',
+          tradingName: 'Adega da Cerveja - Pinheiros',
+          ownerName: 'Zé da Silva',
+          document: '1432132123891/0001',
+          coverageArea: {
+            type: 'MultiPolygon',
+            coordinates: [
+              [[[30, 20], [45, 40], [10, 40], [30, 20]]],
+              [[[15, 5], [40, 10], [10, 20], [5, 10], [15, 5]]]
+            ]
+          },
+          address: {
+            type: 'Point',
+            coordinates: [-46.57421, -21.785741]
+          }
+        }
+      )
+    })
+
+    test('Should return null when findPartnerByIdRepository returns null', async () => {
+      const { dbPartner, findPartnerByIdRepository } = makeDbPartnerSut()
+
+      jest.spyOn(findPartnerByIdRepository, 'findPartnerById').mockResolvedValueOnce(null)
+      const result = await dbPartner.findPartnerById(partnerId)
+
+      expect(result).toBeFalsy()
+    })
+
+    test('Should throw error when findPartnerByIdRepository throw error', async () => {
+      const { dbPartner, findPartnerByIdRepository } = makeDbPartnerSut()
+
+      jest.spyOn(findPartnerByIdRepository, 'findPartnerById').mockRejectedValueOnce(new Error())
+      const result = dbPartner.findPartnerById(partnerId)
 
       await expect(result).rejects.toThrow()
     })

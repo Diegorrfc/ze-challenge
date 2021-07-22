@@ -1,10 +1,10 @@
+import { CompositeAddressValidator } from '../../../presentation/controllers/helpers/validators/add-partner-request/composite-address-validator'
+import { CompositeBodyRequiredField } from '../../../presentation/controllers/helpers/validators/add-partner-request/composite-required-field'
 import { ComponentValidation } from '../../../presentation/controllers/helpers/validators/component-validation'
-import { CompositeAddressValidator } from '../../../presentation/controllers/helpers/validators/composite-address-validator'
-import { CompositeCoverageAreaValidator } from '../../../presentation/controllers/helpers/validators/composite-coverage-area-validator'
-import { CompositeBodyRequiredField } from '../../../presentation/controllers/helpers/validators/composite-required-field'
+import { CompositeCoverageAreaValidator } from '../../../presentation/controllers/helpers/validators/add-partner-request/composite-coverage-area-validator'
 import { CompositeValidator } from '../../../presentation/controllers/helpers/validators/composite-validator'
 
-export const componentValidationFactory = (): ComponentValidation => {
+export const addPartnerValidationFactory = (): ComponentValidation => {
   const fields: string[] = ['tradingName', 'ownerName', 'document', 'coverageArea', 'address']
   const componetsValidation: ComponentValidation[] = []
   fields.forEach((fieldName) => componetsValidation.push(new CompositeBodyRequiredField(fieldName)))

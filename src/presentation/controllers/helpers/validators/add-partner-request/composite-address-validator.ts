@@ -1,5 +1,5 @@
-import { InvalidField, MissingField } from '../errors'
-import { ComponentValidation } from './component-validation'
+import { InvalidField, MissingField } from '../../errors'
+import { ComponentValidation } from '../component-validation'
 
 export class CompositeAddressValidator implements ComponentValidation {
   private readonly fieldsName: string[] = ['type', 'coordinates']

@@ -1,6 +1,6 @@
-import { MissingField } from '../errors'
+import { MissingField } from '../../errors'
+import { CompositeValidator } from '../composite-validator'
 import { CompositeBodyRequiredField } from './composite-required-field'
-import { CompositeValidator } from './composite-validator'
 
 describe('CompositeBodyRequiredField', () => {
   test('Should return erro when field not exist', () => {

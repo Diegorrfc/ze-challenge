@@ -1,18 +1,20 @@
-import { MongoHelper } from './mongodb/helpers/mongo-helper'
+import mongoose from 'mongoose'
 import { PartnerRepository } from './partner-repository'
+import PartnerSchemaModel from './mongodb/helpers/partner-schema'
 
 describe('Partner Repository', () => {
   beforeAll(async () => {
-    await MongoHelper.connect(process.env.MONGO_URL)
+    await mongoose.connect(process.env.MONGO_URL, { useCreateIndex: true })
   })
 
   beforeEach(async () => {
-    await (await MongoHelper.getCollection('partners')).deleteMany({})
+    await PartnerSchemaModel.deleteMany({}).exec()
   })
 
   afterAll(async () => {
-    await MongoHelper.disconnect()
+    await mongoose.disconnect()
   })
+
   test('Should call mongo with correct values', async () => {
     const partnerRepository = new PartnerRepository()
     const partner = await partnerRepository.add({
@@ -73,9 +75,37 @@ describe('Partner Repository', () => {
     expect(hasAlready).toBeTruthy()
   })
 
-  test('Should return false when not exist partner', async () => {
+  test('Should return false when not exist partner with document 1432132123891/0001', async () => {
     const partnerRepository = new PartnerRepository()
     const hasAlready = await partnerRepository.hasPartnerByDocument('1432132123891/0001')
     expect(hasAlready).toBeFalsy()
+  })
+
+  test('Should return false when not exist partner with id', async () => {
+    const partnerRepository = new PartnerRepository()
+    const hasAlready = await partnerRepository.findPartnerById('60f86c26796bab0562182d9e')
+    expect(hasAlready).toBeFalsy()
+  })
+
+  test('Should return partner when partner id exist', async () => {
+    const partnerRepository = new PartnerRepository()
+    const partner = await partnerRepository.add({
+      tradingName: 'Adega da Cerveja - Pinheiros',
+      ownerName: 'Zé da Silva',
+      document: '1432132123891/0001',
+      coverageArea: {
+        type: 'MultiPolygon',
+        coordinates: [
+          [[[30, 20], [45, 40], [10, 40], [30, 20]]],
+          [[[15, 5], [40, 10], [10, 20], [5, 10], [15, 5]]]
+        ]
+      },
+      address: {
+        type: 'Point',
+        coordinates: [-46.57421, -21.785741]
+      }
+    })
+    const hasAlready = await partnerRepository.findPartnerById(partner.id)
+    expect(hasAlready).toBeTruthy()
   })
 })

@@ -1,4 +1,4 @@
-import { InvalidField, MissingField } from '../errors'
+import { InvalidField, MissingField } from '../../errors'
 import { CompositeCoverageAreaValidator } from './composite-coverage-area-validator'
 
 describe('CompositeCoverageAreaValidator', () => {

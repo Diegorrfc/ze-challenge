@@ -1,4 +1,4 @@
-import { InvalidField, MissingField } from '../errors'
+import { InvalidField, MissingField } from '../../errors'
 import { CompositeAddressValidator } from './composite-address-validator'
 
 describe('Composite Address Validator', () => {

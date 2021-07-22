@@ -4,7 +4,7 @@
   "description": "ze-challenge",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --detectOpenHandles",
     "start": "sucrase-node src/main/server.ts"
   },
   "keywords": [],
@@ -34,6 +34,7 @@
   },
   "dependencies": {
     "express": "^4.17.1",
-    "mongodb": "^4.0.0"
+    "mongodb": "^4.0.0",
+    "mongoose": "^5.13.3"
   }
 }

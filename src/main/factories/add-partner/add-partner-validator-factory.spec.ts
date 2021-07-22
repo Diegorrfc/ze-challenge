@@ -1,10 +1,9 @@
+import { CompositeAddressValidator } from '../../../presentation/controllers/helpers/validators/add-partner-request/composite-address-validator'
+import { CompositeBodyRequiredField } from '../../../presentation/controllers/helpers/validators/add-partner-request/composite-required-field'
 import { ComponentValidation } from '../../../presentation/controllers/helpers/validators/component-validation'
-import { CompositeAddressValidator } from '../../../presentation/controllers/helpers/validators/composite-address-validator'
-import { CompositeCoverageAreaValidator } from '../../../presentation/controllers/helpers/validators/composite-coverage-area-validator'
-import { CompositeBodyRequiredField } from '../../../presentation/controllers/helpers/validators/composite-required-field'
 import { CompositeValidator } from '../../../presentation/controllers/helpers/validators/composite-validator'
-import { componentValidationFactory } from './composition-validator'
-
+import { addPartnerValidationFactory } from './add-partner-validator-factory'
+import { CompositeCoverageAreaValidator } from '../../../presentation/controllers/helpers/validators/add-partner-request/composite-coverage-area-validator'
 jest.mock('../../../presentation/controllers/helpers/validators/composite-validator')
 
 describe('componentValidationFactory', () => {
@@ -19,7 +18,7 @@ describe('componentValidationFactory', () => {
     const addressValidator = new CompositeAddressValidator()
     componetsValidation.push(addressValidator)
 
-    componentValidationFactory()
+    addPartnerValidationFactory()
 
     expect(CompositeValidator).toHaveBeenCalledWith(componetsValidation)
   })

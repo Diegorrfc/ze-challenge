@@ -74,6 +74,9 @@ const addPartnerControllerSut = (): TestTypes => {
 }
 
 describe('Add partner controller', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
   test('Should return badRequest if componentValidation validate return error', async () => {
     const httpRequestWithoutAddress = {
       body: {

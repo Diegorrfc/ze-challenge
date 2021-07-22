@@ -1,16 +1,17 @@
 import { AddPartnerRepository } from '../domain/data/db-interfaces/add-partner-repository'
+import { FindPartnerByIdRepository } from '../domain/data/db-interfaces/find-partner-by-id-repository'
 import { HasPartnerByDocumentRepository } from '../domain/data/db-interfaces/has-partner-by-document-repository'
 import { PartnerModel } from '../domain/models/partner-model'
 import { AddPartnerModel } from '../domain/use-cases/add-partner-model'
-import { MongoHelper } from './mongodb/helpers/mongo-helper'
+import PartnerSchemaModel from './mongodb/helpers/partner-schema'
 
-export class PartnerRepository implements AddPartnerRepository, HasPartnerByDocumentRepository {
+export class PartnerRepository implements AddPartnerRepository, HasPartnerByDocumentRepository, FindPartnerByIdRepository {
   async add(partnerModel: AddPartnerModel): Promise<PartnerModel> {
-    const accountCollection = await MongoHelper.getCollection('partners')
-    const accountResult = await accountCollection.insertOne(partnerModel)
-    const partnerId = accountResult.insertedId.toHexString()
+    const validPartner = new PartnerSchemaModel(partnerModel)
+    const partner = await validPartner.save()
+
     return {
-      id: partnerId,
+      id: partner.id,
       tradingName: partnerModel.tradingName,
       ownerName: partnerModel.ownerName,
       document: partnerModel.document,
@@ -26,8 +27,28 @@ export class PartnerRepository implements AddPartnerRepository, HasPartnerByDocu
   }
 
   async hasPartnerByDocument(documentNumber: string): Promise<boolean> {
-    const accountCollection = await MongoHelper.getCollection('partners')
-    const hasPartner = await accountCollection.findOne({ document: documentNumber })
-    return !!hasPartner
+    return PartnerSchemaModel.exists({ document: documentNumber })
+  }
+
+  async findPartnerById(id: string): Promise<PartnerModel> {
+    const partner = await PartnerSchemaModel.findById(id).exec()
+    if (!partner) {
+      return null
+    }
+
+    return {
+      id: partner.id,
+      tradingName: 'partner',
+      ownerName: 'partner',
+      document: 'partner',
+      coverageArea: {
+        type: 'partner',
+        coordinates: []
+      },
+      address: {
+        type: 'partner',
+        coordinates: []
+      }
+    }
   }
 }
