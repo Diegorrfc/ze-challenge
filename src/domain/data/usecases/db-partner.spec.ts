@@ -119,4 +119,52 @@ describe('Db Partner', () => {
       await expect(result).rejects.toThrow()
     })
   })
+
+  describe('SearchPartner', () => {
+    const coordinates = {
+      longitude: 70,
+      latitude: 180
+    }
+    test('Should return partners with success', async () => {
+      const partner = {
+        id: '1',
+        tradingName: 'Adega da Cerveja - Pinheiros',
+        ownerName: 'Zé da Silva',
+        document: '1432132123891/0001',
+        coverageArea: {
+          type: 'MultiPolygon',
+          coordinates: [
+            [[[30, 20], [45, 40], [10, 40], [30, 20]]],
+            [[[15, 5], [40, 10], [10, 20], [5, 10], [15, 5]]]
+          ]
+        },
+        address: {
+          type: 'Point',
+          coordinates: [-46.57421, -21.785741]
+        }
+      }
+      const { dbPartner } = makeDbPartnerSut()
+
+      const result = await dbPartner.searchPartner(coordinates.longitude, coordinates.latitude)
+
+      expect(result).toStrictEqual([partner, partner])
+    })
+
+    test('Should return empty partner', async () => {
+      const { dbPartner, searchPartnerRepository } = makeDbPartnerSut()
+      jest.spyOn(searchPartnerRepository, 'searchPartner').mockResolvedValueOnce([])
+      const result = await dbPartner.searchPartner(coordinates.longitude, coordinates.latitude)
+
+      expect(result).toStrictEqual([])
+    })
+
+    test('Should throw error when searchPartner throw error', async () => {
+      const { dbPartner, searchPartnerRepository } = makeDbPartnerSut()
+
+      jest.spyOn(searchPartnerRepository, 'searchPartner').mockRejectedValueOnce(new Error())
+      const result = dbPartner.searchPartner(coordinates.longitude, coordinates.latitude)
+
+      await expect(result).rejects.toThrow()
+    })
+  })
 })

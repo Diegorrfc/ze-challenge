@@ -4,12 +4,14 @@ import { AddPartnerRepository } from '../db-interfaces/add-partner-repository'
 import { LoadPartnerByIdRepository } from '../db-interfaces/load-partner-by-id-repository'
 import { HasPartnerByDocumentRepository } from '../db-interfaces/has-partner-by-document-repository'
 import { DbPartner } from './db-partner'
+import { SearchPartnerRepository } from '../db-interfaces/search-partner-repository'
 
 export interface TypesSut {
   dbPartner: DbPartner
   addPartnerRepository: AddPartnerRepository
   hasPartnerByDocumentRepository: HasPartnerByDocumentRepository
   loadPartnerByIdRepository: LoadPartnerByIdRepository
+  searchPartnerRepository: SearchPartnerRepository
 }
 
 export const partnerToAdd =
@@ -76,16 +78,29 @@ const makeLoadPartnerByIdRepositoryStub = (): LoadPartnerByIdRepository => {
   return new LoadPartnerByIdRepositoryStub()
 }
 
+const makeSearchPartner = (): SearchPartnerRepository => {
+  class SearchPartnerStub implements SearchPartnerRepository {
+    async searchPartner(longitude: number, latitude: number): Promise<PartnerModel[]> {
+      return Promise.resolve(
+        [partnerResponse, partnerResponse]
+      )
+    }
+  }
+  return new SearchPartnerStub()
+}
+
 export const makeDbPartnerSut = (): TypesSut => {
   const addPartnerRepository = makeAddPartnerRepositoryStub()
   const hasPartnerByDocumentRepositoryStub = makeHasPartnerByDocumentRepositoryStub()
   const loadPartnerByIdRepositoryStub = makeLoadPartnerByIdRepositoryStub()
-  const db = new DbPartner(addPartnerRepository, hasPartnerByDocumentRepositoryStub, loadPartnerByIdRepositoryStub)
+  const searchPartnerStub = makeSearchPartner()
+  const db = new DbPartner(addPartnerRepository, hasPartnerByDocumentRepositoryStub, loadPartnerByIdRepositoryStub, searchPartnerStub)
 
   return {
     dbPartner: db,
     addPartnerRepository: addPartnerRepository,
     hasPartnerByDocumentRepository: hasPartnerByDocumentRepositoryStub,
-    loadPartnerByIdRepository: loadPartnerByIdRepositoryStub
+    loadPartnerByIdRepository: loadPartnerByIdRepositoryStub,
+    searchPartnerRepository: searchPartnerStub
   }
 }

@@ -6,7 +6,7 @@ import { addPartnerValidationFactory } from './add-partner-validator-factory'
 
 export const addPartnerControllerFactory = (): Controller => {
   const partnerRepository = new PartnerRepository()
-  const dbPartner = new DbPartner(partnerRepository, partnerRepository, partnerRepository)
+  const dbPartner = new DbPartner(partnerRepository, partnerRepository, partnerRepository, partnerRepository)
   const validations = addPartnerValidationFactory()
   return new AddPartnerController(dbPartner, validations, dbPartner)
 }

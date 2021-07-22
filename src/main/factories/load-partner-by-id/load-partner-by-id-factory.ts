@@ -6,7 +6,7 @@ import { loadPartnerByIdValidationFactory } from './load-partner-by-id-validator
 
 export const loadPartnerByIdControllerFactory = (): Controller => {
   const partnerRepository = new PartnerRepository()
-  const dbPartner = new DbPartner(partnerRepository, partnerRepository, partnerRepository)
+  const dbPartner = new DbPartner(partnerRepository, partnerRepository, partnerRepository, partnerRepository)
   const validations = loadPartnerByIdValidationFactory()
   return new LoadPartnerByIdController(dbPartner, validations)
 }

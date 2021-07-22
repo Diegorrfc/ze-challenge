@@ -1,11 +1,12 @@
 import { AddPartnerRepository } from '../domain/data/db-interfaces/add-partner-repository'
 import { LoadPartnerByIdRepository } from '../domain/data/db-interfaces/load-partner-by-id-repository'
 import { HasPartnerByDocumentRepository } from '../domain/data/db-interfaces/has-partner-by-document-repository'
+import { SearchPartnerRepository } from '../domain/data/db-interfaces/search-partner-repository'
 import { PartnerModel } from '../domain/models/partner-model'
 import { AddPartnerModel } from '../domain/use-cases/add-partner-model'
 import PartnerSchemaModel from './mongodb/helpers/partner-schema'
 
-export class PartnerRepository implements AddPartnerRepository, HasPartnerByDocumentRepository, LoadPartnerByIdRepository {
+export class PartnerRepository implements AddPartnerRepository, HasPartnerByDocumentRepository, LoadPartnerByIdRepository, SearchPartnerRepository {
   async add(partnerModel: AddPartnerModel): Promise<PartnerModel> {
     const validPartner = new PartnerSchemaModel(partnerModel)
     const partner = await validPartner.save()
@@ -53,19 +54,20 @@ export class PartnerRepository implements AddPartnerRepository, HasPartnerByDocu
     }
   }
 
-  // async findNearPartnerByCoordinate(longitude: string, latitude: string): Promise<Array<PartnerModel>> {
-  //   const connecticut = await PartnerSchemaModel.find({
-  //     coverageArea:
-  //     {
-  //       $geoWithin:
-  //       {
-  //         $geometry: {
-  //           type: 'Point',
-  //           coordinates: [longitude, latitude]
-  //         }
-  //       }
-  //     }
-  //   }).exec()
-  //   console.log(connecticut)
-  // }
+  async searchPartner(longitude: number, latitude: number): Promise<PartnerModel[]> {
+    const connecticut = await PartnerSchemaModel.find({
+      coverageArea:
+      {
+        $geoWithin:
+        {
+          $geometry: {
+            type: 'Point',
+            coordinates: [longitude, latitude]
+          }
+        }
+      }
+    }).exec()
+    console.log(connecticut)
+    return Promise.resolve(null)
+  }
 }
