@@ -1,4 +1,4 @@
-import { AddPartner } from '../../../domain/use-cases/add-partner'
+import { AddPartner } from '../../../domain/use-cases/interfaces/add-partner-interface'
 import { HasPartnerByDocument } from '../../../domain/use-cases/has-partner-by-document'
 import { Controller } from '../controller'
 import { PartnerAlreadyExists } from '../helpers/errors/partner-already-exists'

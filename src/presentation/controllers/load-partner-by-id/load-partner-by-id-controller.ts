@@ -1,4 +1,4 @@
-import { LoadPartnerById } from '../../../domain/use-cases/load-partner-by-id'
+import { LoadPartnerById } from '../../../domain/use-cases/interfaces/load-partner-by-id-interface'
 import { Controller } from '../controller'
 import { MissingField } from '../helpers/errors'
 import { HttpRequest, HttpResponse } from '../helpers/http/http'

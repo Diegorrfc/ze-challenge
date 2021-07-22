@@ -1,4 +1,4 @@
-import { SearchPartner } from '../../../domain/use-cases/search-partner'
+import { SearchPartner } from '../../../domain/use-cases/interfaces/search-partner-interface'
 import { Controller } from '../controller'
 import { MissingField } from '../helpers/errors'
 import { HttpRequest, HttpResponse } from '../helpers/http/http'

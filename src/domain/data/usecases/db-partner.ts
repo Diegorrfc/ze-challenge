@@ -1,12 +1,12 @@
 import { PartnerModel } from '../../models/partner-model'
-import { AddPartner } from '../../use-cases/add-partner'
+import { AddPartner } from '../../use-cases/interfaces/add-partner-interface'
 import { AddPartnerModel } from '../../use-cases/add-partner-model'
-import { LoadPartnerById } from '../../use-cases/load-partner-by-id'
+import { LoadPartnerById } from '../../use-cases/interfaces/load-partner-by-id-interface'
 import { HasPartnerByDocument } from '../../use-cases/has-partner-by-document'
 import { AddPartnerRepository } from '../db-interfaces/add-partner-repository'
 import { LoadPartnerByIdRepository } from '../db-interfaces/load-partner-by-id-repository'
 import { HasPartnerByDocumentRepository } from '../db-interfaces/has-partner-by-document-repository'
-import { SearchPartner } from '../../use-cases/search-partner'
+import { SearchPartner } from '../../use-cases/interfaces/search-partner-interface'
 import { SearchPartnerRepository } from '../db-interfaces/search-partner-repository'
 
 export class DbPartner implements AddPartner, HasPartnerByDocument, LoadPartnerById, SearchPartner {

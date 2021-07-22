@@ -1,5 +1,5 @@
 import { PartnerModel } from '../../../domain/models/partner-model'
-import { LoadPartnerById } from '../../../domain/use-cases/load-partner-by-id'
+import { LoadPartnerById } from '../../../domain/use-cases/interfaces/load-partner-by-id-interface'
 import { MissingField } from '../helpers/errors'
 import { ServerError } from '../helpers/errors/server-error'
 import { HttpRequest } from '../helpers/http/http'

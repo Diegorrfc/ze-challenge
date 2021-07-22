@@ -1,5 +1,5 @@
 import { PartnerModel } from '../../../domain/models/partner-model'
-import { SearchPartner } from '../../../domain/use-cases/search-partner'
+import { SearchPartner } from '../../../domain/use-cases/interfaces/search-partner-interface'
 import { MissingField } from '../helpers/errors'
 import { ServerError } from '../helpers/errors/server-error'
 import { HttpRequest } from '../helpers/http/http'
