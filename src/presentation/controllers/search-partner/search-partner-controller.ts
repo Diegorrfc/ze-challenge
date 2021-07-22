@@ -1,7 +1,8 @@
 import { SearchPartner } from '../../../domain/use-cases/search-partner'
 import { Controller } from '../controller'
+import { MissingField } from '../helpers/errors'
 import { HttpRequest, HttpResponse } from '../helpers/http/http'
-import { Ok, serverError } from '../helpers/http/http-response-status-code'
+import { badRequest, Ok, serverError } from '../helpers/http/http-response-status-code'
 
 export class SearchPartnerController implements Controller {
   private readonly searchPartner: SearchPartner
@@ -12,8 +13,16 @@ export class SearchPartnerController implements Controller {
 
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const longitude = httpRequest.params.long
-      const latitude = httpRequest.params.lat
+      const params = httpRequest.params
+      if (!params.longitude) {
+        return badRequest(new MissingField('longitude'))
+      }
+      if (!params.latitude) {
+        return badRequest(new MissingField('latitude'))
+      }
+
+      const longitude = httpRequest.params.longitude
+      const latitude = httpRequest.params.latitude
       const partner = await this.searchPartner.searchPartner(longitude, latitude)
       return Ok(partner)
     } catch (error) {

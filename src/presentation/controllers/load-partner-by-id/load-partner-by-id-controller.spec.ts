@@ -1,6 +1,7 @@
 import { PartnerModel } from '../../../domain/models/partner-model'
 import { LoadPartnerById } from '../../../domain/use-cases/load-partner-by-id'
 import { MissingField } from '../helpers/errors'
+import { ServerError } from '../helpers/errors/server-error'
 import { HttpRequest } from '../helpers/http/http'
 import { badRequest, Ok } from '../helpers/http/http-response-status-code'
 import { ComponentValidation } from '../helpers/validators/component-validation'
@@ -61,5 +62,17 @@ describe('Load Partner by id controller', () => {
     const loadById = new LoadPartnerByIdController(makeLoadPartnerStub(), makeComponentValidation())
     const result = await loadById.handle(httpRequest)
     expect(result).toStrictEqual(Ok(partnerObject))
+  })
+
+  test('Should return server error when loadPartnerById throws any error', async () => {
+    const httpRequest: HttpRequest = {
+      params: { id: 'Partner' }
+    }
+    const loadPartnerStub = makeLoadPartnerStub()
+    jest.spyOn(loadPartnerStub, 'loadPartnerById').mockRejectedValueOnce(new Error('any_error'))
+    const loadById = new LoadPartnerByIdController(loadPartnerStub, makeComponentValidation())
+
+    const searchPartnerResult = await loadById.handle(httpRequest)
+    expect(searchPartnerResult).toStrictEqual({ statusCode: 500, body: new ServerError() })
   })
 })

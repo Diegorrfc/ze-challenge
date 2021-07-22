@@ -1,6 +1,7 @@
 import { PartnerModel } from '../../../domain/models/partner-model'
 import { SearchPartner } from '../../../domain/use-cases/search-partner'
 import { MissingField } from '../helpers/errors'
+import { ServerError } from '../helpers/errors/server-error'
 import { HttpRequest } from '../helpers/http/http'
 import { badRequest, Ok } from '../helpers/http/http-response-status-code'
 import { SearchPartnerController } from './search-partner-controller'
@@ -33,21 +34,46 @@ const makeSearchPartnerStub = (): SearchPartner => {
 }
 
 describe('Search Partner controller', () => {
-  test('Should return badRequest if no params is provided', async () => {
-    const httpRequest: HttpRequest = {}
+  test('Should return badRequest if no longitude params is provided', async () => {
+    const httpRequest: HttpRequest = {
+      params: { latitude: 20 }
+    }
     const loadById = new SearchPartnerController(makeSearchPartnerStub())
 
     const result = await loadById.handle(httpRequest)
 
-    expect(result).toStrictEqual(badRequest(new MissingField('id')))
+    expect(result).toStrictEqual(badRequest(new MissingField('longitude')))
+  })
+
+  test('Should return badRequest if no latitude params is provided', async () => {
+    const httpRequest: HttpRequest = {
+      params: { longitude: 30 }
+    }
+    const loadById = new SearchPartnerController(makeSearchPartnerStub())
+
+    const result = await loadById.handle(httpRequest)
+
+    expect(result).toStrictEqual(badRequest(new MissingField('latitude')))
   })
 
   test('Should return 200 if all data is provided', async () => {
     const httpRequest: HttpRequest = {
-      params: { id: 'Partner' }
+      params: { latitude: 20, longitude: 30 }
     }
-    const loadById = new SearchPartnerController(makeSearchPartnerStub())
-    const result = await loadById.handle(httpRequest)
-    expect(result).toStrictEqual(Ok(partnerObject))
+    const search = new SearchPartnerController(makeSearchPartnerStub())
+    const result = await search.handle(httpRequest)
+    expect(result).toStrictEqual(Ok([partnerObject, partnerObject]))
+  })
+
+  test('Should returns server error when search partner throws any error', async () => {
+    const httpRequest: HttpRequest = {
+      params: { latitude: 20, longitude: 30 }
+    }
+    const searchStub = makeSearchPartnerStub()
+    jest.spyOn(searchStub, 'searchPartner').mockRejectedValueOnce(new Error('any_error'))
+    const search = new SearchPartnerController(searchStub)
+
+    const searchPartnerResult = await search.handle(httpRequest)
+    expect(searchPartnerResult).toStrictEqual({ statusCode: 500, body: new ServerError() })
   })
 })
