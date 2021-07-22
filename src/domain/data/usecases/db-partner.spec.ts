@@ -73,12 +73,12 @@ describe('Db Partner', () => {
     })
   })
 
-  describe('findPartnerById', () => {
+  describe('loadPartnerById', () => {
     const partnerId = '123456'
     test('Should return partner with success', async () => {
       const { dbPartner } = makeDbPartnerSut()
 
-      const result = await dbPartner.findPartnerById(partnerId)
+      const result = await dbPartner.loadPartnerById(partnerId)
 
       expect(result).toStrictEqual(
         {
@@ -101,20 +101,20 @@ describe('Db Partner', () => {
       )
     })
 
-    test('Should return null when findPartnerByIdRepository returns null', async () => {
-      const { dbPartner, findPartnerByIdRepository } = makeDbPartnerSut()
+    test('Should return null when loadPartnerByIdRepository returns null', async () => {
+      const { dbPartner, loadPartnerByIdRepository } = makeDbPartnerSut()
 
-      jest.spyOn(findPartnerByIdRepository, 'findPartnerById').mockResolvedValueOnce(null)
-      const result = await dbPartner.findPartnerById(partnerId)
+      jest.spyOn(loadPartnerByIdRepository, 'loadPartnerById').mockResolvedValueOnce(null)
+      const result = await dbPartner.loadPartnerById(partnerId)
 
       expect(result).toBeFalsy()
     })
 
-    test('Should throw error when findPartnerByIdRepository throw error', async () => {
-      const { dbPartner, findPartnerByIdRepository } = makeDbPartnerSut()
+    test('Should throw error when loadPartnerByIdRepository throw error', async () => {
+      const { dbPartner, loadPartnerByIdRepository } = makeDbPartnerSut()
 
-      jest.spyOn(findPartnerByIdRepository, 'findPartnerById').mockRejectedValueOnce(new Error())
-      const result = dbPartner.findPartnerById(partnerId)
+      jest.spyOn(loadPartnerByIdRepository, 'loadPartnerById').mockRejectedValueOnce(new Error())
+      const result = dbPartner.loadPartnerById(partnerId)
 
       await expect(result).rejects.toThrow()
     })

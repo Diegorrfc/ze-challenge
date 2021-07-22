@@ -1,7 +1,7 @@
 import { PartnerModel } from '../../models/partner-model'
 import { AddPartnerModel } from '../../use-cases/add-partner-model'
 import { AddPartnerRepository } from '../db-interfaces/add-partner-repository'
-import { FindPartnerByIdRepository } from '../db-interfaces/find-partner-by-id-repository'
+import { LoadPartnerByIdRepository } from '../db-interfaces/load-partner-by-id-repository'
 import { HasPartnerByDocumentRepository } from '../db-interfaces/has-partner-by-document-repository'
 import { DbPartner } from './db-partner'
 
@@ -9,7 +9,7 @@ export interface TypesSut {
   dbPartner: DbPartner
   addPartnerRepository: AddPartnerRepository
   hasPartnerByDocumentRepository: HasPartnerByDocumentRepository
-  findPartnerByIdRepository: FindPartnerByIdRepository
+  loadPartnerByIdRepository: LoadPartnerByIdRepository
 }
 
 export const partnerToAdd =
@@ -67,25 +67,25 @@ const makeHasPartnerByDocumentRepositoryStub = (): HasPartnerByDocumentRepositor
   return new HasPartnerByDocumentRepositoryStub()
 }
 
-const makeFindPartnerByIdRepositoryStub = (): FindPartnerByIdRepository => {
-  class FindPartnerByIdRepositoryStub implements FindPartnerByIdRepository {
-    async findPartnerById(id: string): Promise<PartnerModel> {
+const makeLoadPartnerByIdRepositoryStub = (): LoadPartnerByIdRepository => {
+  class LoadPartnerByIdRepositoryStub implements LoadPartnerByIdRepository {
+    async loadPartnerById(id: string): Promise<PartnerModel> {
       return Promise.resolve(partnerResponse)
     }
   }
-  return new FindPartnerByIdRepositoryStub()
+  return new LoadPartnerByIdRepositoryStub()
 }
 
 export const makeDbPartnerSut = (): TypesSut => {
   const addPartnerRepository = makeAddPartnerRepositoryStub()
   const hasPartnerByDocumentRepositoryStub = makeHasPartnerByDocumentRepositoryStub()
-  const findPartnerByIdRepositoryStub = makeFindPartnerByIdRepositoryStub()
-  const db = new DbPartner(addPartnerRepository, hasPartnerByDocumentRepositoryStub, findPartnerByIdRepositoryStub)
+  const loadPartnerByIdRepositoryStub = makeLoadPartnerByIdRepositoryStub()
+  const db = new DbPartner(addPartnerRepository, hasPartnerByDocumentRepositoryStub, loadPartnerByIdRepositoryStub)
 
   return {
     dbPartner: db,
     addPartnerRepository: addPartnerRepository,
     hasPartnerByDocumentRepository: hasPartnerByDocumentRepositoryStub,
-    findPartnerByIdRepository: findPartnerByIdRepositoryStub
+    loadPartnerByIdRepository: loadPartnerByIdRepositoryStub
   }
 }

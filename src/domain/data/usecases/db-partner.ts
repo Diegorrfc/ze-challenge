@@ -1,25 +1,25 @@
 import { PartnerModel } from '../../models/partner-model'
 import { AddPartner } from '../../use-cases/add-partner'
 import { AddPartnerModel } from '../../use-cases/add-partner-model'
-import { FindPartnerById } from '../../use-cases/find-partner-by-id'
+import { LoadPartnerById } from '../../use-cases/load-partner-by-id'
 import { HasPartnerByDocument } from '../../use-cases/has-partner-by-document'
 import { AddPartnerRepository } from '../db-interfaces/add-partner-repository'
-import { FindPartnerByIdRepository } from '../db-interfaces/find-partner-by-id-repository'
+import { LoadPartnerByIdRepository } from '../db-interfaces/load-partner-by-id-repository'
 import { HasPartnerByDocumentRepository } from '../db-interfaces/has-partner-by-document-repository'
 
-export class DbPartner implements AddPartner, HasPartnerByDocument, FindPartnerById {
+export class DbPartner implements AddPartner, HasPartnerByDocument, LoadPartnerById {
   private readonly addPartnerRepository: AddPartnerRepository
   private readonly hasPartnerByDocumentRepository: HasPartnerByDocumentRepository
-  private readonly findPartnerByIdRepository: FindPartnerByIdRepository
+  private readonly loadPartnerByIdRepository: LoadPartnerByIdRepository
 
   constructor(
     addPartnerRepository: AddPartnerRepository,
     hasPartnerByDocumentRepository: HasPartnerByDocumentRepository,
-    findPartnerByIdRepository: FindPartnerByIdRepository)
+    loadPartnerByIdRepository: LoadPartnerByIdRepository)
   {
     this.addPartnerRepository = addPartnerRepository
     this.hasPartnerByDocumentRepository = hasPartnerByDocumentRepository
-    this.findPartnerByIdRepository = findPartnerByIdRepository
+    this.loadPartnerByIdRepository = loadPartnerByIdRepository
   }
 
   async add(partnerModel: AddPartnerModel): Promise<PartnerModel> {
@@ -30,7 +30,7 @@ export class DbPartner implements AddPartner, HasPartnerByDocument, FindPartnerB
     return this.hasPartnerByDocumentRepository.hasPartnerByDocument(documentNumber)
   }
 
-  async findPartnerById(id: string): Promise<PartnerModel> {
-    return this.findPartnerByIdRepository.findPartnerById(id)
+  async loadPartnerById(id: string): Promise<PartnerModel> {
+    return this.loadPartnerByIdRepository.loadPartnerById(id)
   }
 }

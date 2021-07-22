@@ -83,7 +83,7 @@ describe('Partner Repository', () => {
 
   test('Should return false when not exist partner with id', async () => {
     const partnerRepository = new PartnerRepository()
-    const hasAlready = await partnerRepository.findPartnerById('60f86c26796bab0562182d9e')
+    const hasAlready = await partnerRepository.loadPartnerById('60f86c26796bab0562182d9e')
     expect(hasAlready).toBeFalsy()
   })
 
@@ -105,7 +105,7 @@ describe('Partner Repository', () => {
         coordinates: [-46.57421, -21.785741]
       }
     })
-    const hasAlready = await partnerRepository.findPartnerById(partner.id)
+    const hasAlready = await partnerRepository.loadPartnerById(partner.id)
     expect(hasAlready).toBeTruthy()
   })
 })

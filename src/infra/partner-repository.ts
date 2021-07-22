@@ -1,11 +1,11 @@
 import { AddPartnerRepository } from '../domain/data/db-interfaces/add-partner-repository'
-import { FindPartnerByIdRepository } from '../domain/data/db-interfaces/find-partner-by-id-repository'
+import { LoadPartnerByIdRepository } from '../domain/data/db-interfaces/load-partner-by-id-repository'
 import { HasPartnerByDocumentRepository } from '../domain/data/db-interfaces/has-partner-by-document-repository'
 import { PartnerModel } from '../domain/models/partner-model'
 import { AddPartnerModel } from '../domain/use-cases/add-partner-model'
 import PartnerSchemaModel from './mongodb/helpers/partner-schema'
 
-export class PartnerRepository implements AddPartnerRepository, HasPartnerByDocumentRepository, FindPartnerByIdRepository {
+export class PartnerRepository implements AddPartnerRepository, HasPartnerByDocumentRepository, LoadPartnerByIdRepository {
   async add(partnerModel: AddPartnerModel): Promise<PartnerModel> {
     const validPartner = new PartnerSchemaModel(partnerModel)
     const partner = await validPartner.save()
@@ -30,7 +30,7 @@ export class PartnerRepository implements AddPartnerRepository, HasPartnerByDocu
     return PartnerSchemaModel.exists({ document: documentNumber })
   }
 
-  async findPartnerById(id: string): Promise<PartnerModel> {
+  async loadPartnerById(id: string): Promise<PartnerModel> {
     const partner = await PartnerSchemaModel.findById(id).lean<any>().exec()
 
     if (!partner) {

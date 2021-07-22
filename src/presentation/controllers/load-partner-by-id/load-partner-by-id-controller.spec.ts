@@ -1,10 +1,10 @@
 import { PartnerModel } from '../../../domain/models/partner-model'
-import { FindPartnerById } from '../../../domain/use-cases/find-partner-by-id'
+import { LoadPartnerById } from '../../../domain/use-cases/load-partner-by-id'
 import { MissingField } from '../helpers/errors'
 import { HttpRequest } from '../helpers/http/http'
 import { badRequest, Ok } from '../helpers/http/http-response-status-code'
 import { ComponentValidation } from '../helpers/validators/component-validation'
-import { FindPartnerByIdController } from './find-partner-by-id-controller'
+import { LoadPartnerByIdController } from './load-partner-by-id-controller'
 
 const partnerObject = {
   id: '1',
@@ -24,13 +24,13 @@ const partnerObject = {
   }
 }
 
-const makeFindPartnerStub = (): FindPartnerById => {
-  class FindPartnerStub implements FindPartnerById {
-    async findPartnerById(id: string): Promise<PartnerModel> {
+const makeLoadPartnerStub = (): LoadPartnerById => {
+  class LoadPartnerStub implements LoadPartnerById {
+    async loadPartnerById(id: string): Promise<PartnerModel> {
       return Promise.resolve(partnerObject)
     }
   }
-  return new FindPartnerStub()
+  return new LoadPartnerStub()
 }
 
 const makeComponentValidation = (): ComponentValidation => {
@@ -42,14 +42,14 @@ const makeComponentValidation = (): ComponentValidation => {
   return new ComponentValidatorStub()
 }
 
-describe('Find Partner by id controller', () => {
+describe('Load Partner by id controller', () => {
   test('Should return badRequest if no params is provided', async () => {
     const httpRequest: HttpRequest = { }
     const validation = makeComponentValidation()
     jest.spyOn(validation, 'validate').mockReturnValue(new MissingField('id'))
-    const findById = new FindPartnerByIdController(makeFindPartnerStub(), validation)
+    const loadById = new LoadPartnerByIdController(makeLoadPartnerStub(), validation)
 
-    const result = await findById.handle(httpRequest)
+    const result = await loadById.handle(httpRequest)
 
     expect(result).toStrictEqual(badRequest(new MissingField('id')))
   })
@@ -58,8 +58,8 @@ describe('Find Partner by id controller', () => {
     const httpRequest: HttpRequest = {
       params: { id: 'Partner' }
     }
-    const findById = new FindPartnerByIdController(makeFindPartnerStub(), makeComponentValidation())
-    const result = await findById.handle(httpRequest)
+    const loadById = new LoadPartnerByIdController(makeLoadPartnerStub(), makeComponentValidation())
+    const result = await loadById.handle(httpRequest)
     expect(result).toStrictEqual(Ok(partnerObject))
   })
 })
