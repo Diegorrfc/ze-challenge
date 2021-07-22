@@ -1,8 +1,8 @@
 import { CompositeAddressValidator } from '../../../presentation/controllers/helpers/validators/add-partner-request/composite-address-validator'
-import { CompositeBodyRequiredField } from '../../../presentation/controllers/helpers/validators/add-partner-request/composite-required-field'
 import { ComponentValidation } from '../../../presentation/controllers/helpers/validators/component-validation'
 import { CompositeCoverageAreaValidator } from '../../../presentation/controllers/helpers/validators/add-partner-request/composite-coverage-area-validator'
 import { CompositeValidator } from '../../../presentation/controllers/helpers/validators/composite-validator'
+import { CompositeBodyRequiredField } from '../../../presentation/controllers/helpers/validators/composite-required-field'
 
 export const addPartnerValidationFactory = (): ComponentValidation => {
   const fields: string[] = ['tradingName', 'ownerName', 'document', 'coverageArea', 'address']

@@ -31,23 +31,24 @@ export class PartnerRepository implements AddPartnerRepository, HasPartnerByDocu
   }
 
   async findPartnerById(id: string): Promise<PartnerModel> {
-    const partner = await PartnerSchemaModel.findById(id).exec()
+    const partner = await PartnerSchemaModel.findById(id).lean<any>().exec()
+
     if (!partner) {
       return null
     }
 
     return {
-      id: partner.id,
-      tradingName: 'partner',
-      ownerName: 'partner',
-      document: 'partner',
+      id: partner._id,
+      tradingName: partner.tradingName,
+      ownerName: partner.ownerName,
+      document: partner.document,
       coverageArea: {
-        type: 'partner',
-        coordinates: []
+        type: partner.coverageArea.type,
+        coordinates: partner.coverageArea.coordinates
       },
       address: {
-        type: 'partner',
-        coordinates: []
+        type: partner.address.type,
+        coordinates: partner.address.coordinates
       }
     }
   }

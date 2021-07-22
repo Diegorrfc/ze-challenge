@@ -1,9 +1,9 @@
 import { CompositeAddressValidator } from '../../../presentation/controllers/helpers/validators/add-partner-request/composite-address-validator'
-import { CompositeBodyRequiredField } from '../../../presentation/controllers/helpers/validators/add-partner-request/composite-required-field'
 import { ComponentValidation } from '../../../presentation/controllers/helpers/validators/component-validation'
 import { CompositeValidator } from '../../../presentation/controllers/helpers/validators/composite-validator'
 import { addPartnerValidationFactory } from './add-partner-validator-factory'
 import { CompositeCoverageAreaValidator } from '../../../presentation/controllers/helpers/validators/add-partner-request/composite-coverage-area-validator'
+import { CompositeBodyRequiredField } from '../../../presentation/controllers/helpers/validators/composite-required-field'
 jest.mock('../../../presentation/controllers/helpers/validators/composite-validator')
 
 describe('componentValidationFactory', () => {

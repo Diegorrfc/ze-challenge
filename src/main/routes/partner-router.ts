@@ -4,7 +4,7 @@ import { findPartnerByIdControllerFactory } from '../factories/find-partner-by-i
 import { routeAdapter } from './router-adapter'
 
 export default (router: Router): void => {
-  router.post('/partner', routeAdapter(addPartnerControllerFactory()))
+  router.post('/partners', routeAdapter(addPartnerControllerFactory()))
 
-  router.post('/partners/:id', routeAdapter(findPartnerByIdControllerFactory()))
+  router.get('/partners/:id', routeAdapter(findPartnerByIdControllerFactory()))
 }

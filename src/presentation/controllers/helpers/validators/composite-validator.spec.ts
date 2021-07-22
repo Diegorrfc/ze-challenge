@@ -1,5 +1,5 @@
-import { MissingField } from '../../errors'
-import { CompositeValidator } from '../composite-validator'
+import { MissingField } from '../errors'
+import { CompositeValidator } from './composite-validator'
 import { CompositeBodyRequiredField } from './composite-required-field'
 
 describe('CompositeBodyRequiredField', () => {

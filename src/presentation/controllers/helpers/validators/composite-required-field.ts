@@ -1,5 +1,5 @@
-import { MissingField } from '../../errors'
-import { ComponentValidation } from '../component-validation'
+import { MissingField } from '../errors'
+import { ComponentValidation } from './component-validation'
 
 export class CompositeBodyRequiredField implements ComponentValidation {
   private readonly fieldName: string
