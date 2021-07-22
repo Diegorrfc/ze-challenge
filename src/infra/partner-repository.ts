@@ -52,4 +52,20 @@ export class PartnerRepository implements AddPartnerRepository, HasPartnerByDocu
       }
     }
   }
+
+  // async findNearPartnerByCoordinate(longitude: string, latitude: string): Promise<Array<PartnerModel>> {
+  //   const connecticut = await PartnerSchemaModel.find({
+  //     coverageArea:
+  //     {
+  //       $geoWithin:
+  //       {
+  //         $geometry: {
+  //           type: 'Point',
+  //           coordinates: [longitude, latitude]
+  //         }
+  //       }
+  //     }
+  //   }).exec()
+  //   console.log(connecticut)
+  // }
 }

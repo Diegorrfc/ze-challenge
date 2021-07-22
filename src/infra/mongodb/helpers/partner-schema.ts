@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
-
 const coverageAreaSchema = new mongoose.Schema({
+  _id: false,
   type: {
     type: String,
     enum: ['MultiPolygon'],
@@ -13,6 +13,7 @@ const coverageAreaSchema = new mongoose.Schema({
 })
 
 const addressSchema = new mongoose.Schema({
+  _id: false,
   type: {
     type: String,
     enum: ['Point'],
@@ -28,11 +29,10 @@ const partnerSchema = new mongoose.Schema({
   tradingName: { type: String, required: true },
   ownerName: { type: String, required: true },
   document: { type: String, required: true, index: true, unique: true },
-  coverageArea: coverageAreaSchema,
-  address: addressSchema
+  coverageArea: { type: coverageAreaSchema, index: '2dsphere' },
+  address: { type: addressSchema, index: '2dsphere' }
 })
 
 const partnerSchemaModel = mongoose.model('Partner', partnerSchema)
 partnerSchemaModel.createIndexes()
-
 export default partnerSchemaModel

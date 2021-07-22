@@ -45,6 +45,7 @@ export class AddPartnerController implements Controller {
       })
       return Ok(partner)
     } catch (error) {
+      console.log(error)
       return serverError()
     }
   }
