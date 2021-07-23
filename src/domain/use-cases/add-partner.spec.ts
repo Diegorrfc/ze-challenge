@@ -1,3 +1,4 @@
+import { PartnerAlreadyExists } from '../../presentation/controllers/helpers/errors/partner-already-exists'
 import { AddPartnerRepository } from '../data/db-interfaces/add-partner-repository'
 import { HasPartnerByDocumentRepository } from '../data/db-interfaces/has-partner-by-document-repository'
 import { PartnerModel } from '../models/partner-model'
@@ -59,7 +60,7 @@ const makeAddPartnerRepositoryStub = (): AddPartnerRepository => {
 const makeHasPartnerByDocumentRepositoryStub = (): HasPartnerByDocumentRepository => {
   class HasPartnerByDocumentRepositoryStub implements HasPartnerByDocumentRepository {
     async hasPartnerByDocument(documentNumber: string): Promise<boolean> {
-      return Promise.resolve(true)
+      return Promise.resolve(false)
     }
   }
   return new HasPartnerByDocumentRepositoryStub()
@@ -88,7 +89,7 @@ describe('AddPartnerUseCase', () => {
       expect(spyMongoRespositoryAdapter).toHaveBeenCalledWith(partnerToAdd)
     })
 
-    test('Should call return partner with success', async () => {
+    test('Should return partner with success', async () => {
       const { addPartnerUseCase } = makeAddPartnerUseCaseSut()
 
       const partner = await addPartnerUseCase.add(partnerToAdd)
@@ -103,34 +104,13 @@ describe('AddPartnerUseCase', () => {
       const partner = addPartnerUseCase.add(partnerToAdd)
       await expect(partner).rejects.toThrow()
     })
-  })
 
-  describe('hasPartnerByDocument', () => {
-    const documentNumber = '123456'
-    test('Should return true when hasPartnerByDocument returns true', async () => {
-      const { addPartnerUseCase } = makeAddPartnerUseCaseSut()
-
-      const result = await addPartnerUseCase.hasPartnerByDocument(documentNumber)
-
-      expect(result).toBeTruthy()
-    })
-
-    test('Should return false when hasPartnerByDocument returns false', async () => {
+    test('Should throws PartnerAlreadyExists when partner already exists', async () => {
       const { addPartnerUseCase, hasPartnerByDocumentRepository } = makeAddPartnerUseCaseSut()
+      jest.spyOn(hasPartnerByDocumentRepository, 'hasPartnerByDocument').mockResolvedValue(true)
 
-      jest.spyOn(hasPartnerByDocumentRepository, 'hasPartnerByDocument').mockResolvedValueOnce(false)
-      const result = await addPartnerUseCase.hasPartnerByDocument(documentNumber)
-
-      expect(result).toBeFalsy()
-    })
-
-    test('Should throw error when hasPartnerByDocument throw error', async () => {
-      const { addPartnerUseCase, hasPartnerByDocumentRepository } = makeAddPartnerUseCaseSut()
-
-      jest.spyOn(hasPartnerByDocumentRepository, 'hasPartnerByDocument').mockRejectedValueOnce(new Error())
-      const result = addPartnerUseCase.hasPartnerByDocument(documentNumber)
-
-      await expect(result).rejects.toThrow()
+      const partner = addPartnerUseCase.add(partnerToAdd)
+      await expect(partner).rejects.toThrowError(new PartnerAlreadyExists())
     })
   })
 })

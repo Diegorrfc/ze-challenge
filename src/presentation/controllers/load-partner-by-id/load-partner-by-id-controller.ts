@@ -6,11 +6,11 @@ import { badRequest, Ok, serverError } from '../helpers/http/http-response-statu
 import { ComponentValidation } from '../helpers/validators/component-validation'
 
 export class LoadPartnerByIdController implements Controller {
-  private readonly hasPartnerByDocument: LoadPartnerById
+  private readonly loadPartnerByIdUseCase: LoadPartnerById
   private readonly componentValidation: ComponentValidation
 
-  constructor(hasPartnerByDocument: LoadPartnerById, componentValidation: ComponentValidation) {
-    this.hasPartnerByDocument = hasPartnerByDocument
+  constructor(loadPartnerByIdUseCase: LoadPartnerById, componentValidation: ComponentValidation) {
+    this.loadPartnerByIdUseCase = loadPartnerByIdUseCase
     this.componentValidation = componentValidation
   }
 
@@ -21,7 +21,7 @@ export class LoadPartnerByIdController implements Controller {
         return badRequest(new MissingField('id'))
       }
       const id = httpRequest.params.id
-      const partner = await this.hasPartnerByDocument.loadPartnerById(id)
+      const partner = await this.loadPartnerByIdUseCase.loadPartnerById(id)
       return Ok(partner)
     } catch (error) {
       console.log(error)

@@ -5,10 +5,10 @@ import { HttpRequest, HttpResponse } from '../helpers/http/http'
 import { badRequest, Ok, serverError } from '../helpers/http/http-response-status-code'
 
 export class SearchPartnerController implements Controller {
-  private readonly searchPartner: SearchPartner
+  private readonly searchPartnerUseCase: SearchPartner
 
-  constructor(searchPartner: SearchPartner) {
-    this.searchPartner = searchPartner
+  constructor(searchPartnerUseCase: SearchPartner) {
+    this.searchPartnerUseCase = searchPartnerUseCase
   }
 
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
@@ -23,7 +23,7 @@ export class SearchPartnerController implements Controller {
 
       const longitude = httpRequest.params.longitude
       const latitude = httpRequest.params.latitude
-      const partner = await this.searchPartner.searchPartner(longitude, latitude)
+      const partner = await this.searchPartnerUseCase.searchPartner(longitude, latitude)
       return Ok(partner)
     } catch (error) {
       console.log(error)
