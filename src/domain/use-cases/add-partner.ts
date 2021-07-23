@@ -4,6 +4,7 @@ import { HasPartnerByDocumentRepository } from '../data/db-interfaces/has-partne
 import { PartnerModel } from '../models/partner-model'
 import { AddPartnerModel } from './add-partner-model'
 import { AddPartner } from './interfaces/add-partner-interface'
+import { v4 as uuidv4 } from 'uuid'
 
 export class AddPartnerUseCase implements AddPartner {
   private readonly addPartnerRepository: AddPartnerRepository
@@ -21,6 +22,14 @@ export class AddPartnerUseCase implements AddPartner {
       throw new PartnerAlreadyExists()
     }
 
-    return this.addPartnerRepository.add(partnerModel)
+    const partnerWithIndex = AddPartnerUseCase.mapperAddPartnerModel(partnerModel)
+    return this.addPartnerRepository.add(partnerWithIndex)
+  }
+
+  private static mapperAddPartnerModel(partnerModel: AddPartnerModel): PartnerModel {
+    return {
+      id: uuidv4(),
+      ...partnerModel
+    }
   }
 }

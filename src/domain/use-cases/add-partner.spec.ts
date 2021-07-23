@@ -4,6 +4,9 @@ import { HasPartnerByDocumentRepository } from '../data/db-interfaces/has-partne
 import { PartnerModel } from '../models/partner-model'
 import { AddPartnerUseCase } from './add-partner'
 import { AddPartnerModel } from './add-partner-model'
+jest.mock('uuid', () => ({
+  v4: () => 'fd16e644-e57f-4dc6-876e-543c2b4e09a2'
+}))
 
 interface TypesSut {
   addPartnerUseCase: AddPartnerUseCase
@@ -13,7 +16,7 @@ interface TypesSut {
 
 const partnerResponse =
 {
-  id: '1',
+  id: 'fd16e644-e57f-4dc6-876e-543c2b4e09a2',
   tradingName: 'Adega da Cerveja - Pinheiros',
   ownerName: 'Zé da Silva',
   document: '1432132123891/0001',
@@ -86,7 +89,7 @@ describe('AddPartnerUseCase', () => {
 
       await addPartnerUseCase.add(partnerToAdd)
 
-      expect(spyMongoRespositoryAdapter).toHaveBeenCalledWith(partnerToAdd)
+      expect(spyMongoRespositoryAdapter).toHaveBeenCalledWith(partnerResponse)
     })
 
     test('Should return partner with success', async () => {

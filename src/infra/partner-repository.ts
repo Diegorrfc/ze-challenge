@@ -3,28 +3,19 @@ import { LoadPartnerByIdRepository } from '../domain/data/db-interfaces/load-par
 import { HasPartnerByDocumentRepository } from '../domain/data/db-interfaces/has-partner-by-document-repository'
 import { SearchPartnerRepository } from '../domain/data/db-interfaces/search-partner-repository'
 import { PartnerModel } from '../domain/models/partner-model'
-import { AddPartnerModel } from '../domain/use-cases/add-partner-model'
 import PartnerSchemaModel from './mongodb/helpers/partner-schema'
 
 export class PartnerRepository implements AddPartnerRepository, HasPartnerByDocumentRepository, LoadPartnerByIdRepository, SearchPartnerRepository {
-  async add(partnerModel: AddPartnerModel): Promise<PartnerModel> {
-    const validPartner = new PartnerSchemaModel(partnerModel)
-    const partner = await validPartner.save()
-
-    return {
-      id: partner.id,
-      tradingName: partnerModel.tradingName,
-      ownerName: partnerModel.ownerName,
-      document: partnerModel.document,
-      coverageArea: {
-        type: partnerModel.coverageArea.type,
-        coordinates: partnerModel.coverageArea.coordinates
-      },
-      address: {
-        type: partnerModel.address.type,
-        coordinates: partnerModel.address.coordinates
-      }
+  async add(partnerModel: PartnerModel): Promise<PartnerModel> {
+    const { id, ...partnerModelWthoudId } = partnerModel
+    const partnerTosave = {
+      _id: id,
+      ...partnerModelWthoudId
     }
+    const validPartner = new PartnerSchemaModel(partnerTosave)
+    await validPartner.save()
+
+    return partnerModel
   }
 
   async hasPartnerByDocument(documentNumber: string): Promise<boolean> {
