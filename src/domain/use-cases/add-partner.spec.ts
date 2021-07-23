@@ -4,10 +4,6 @@ import { HasPartnerByDocumentRepository } from '../data/db-interfaces/has-partne
 import { PartnerModel } from '../models/partner-model'
 import { AddPartnerUseCase } from './add-partner'
 import { AddPartnerModel } from './add-partner-model'
-jest.mock('uuid', () => ({
-  v4: () => 'fd16e644-e57f-4dc6-876e-543c2b4e09a2'
-}))
-
 interface TypesSut {
   addPartnerUseCase: AddPartnerUseCase
   addPartnerRepository: AddPartnerRepository
@@ -16,7 +12,7 @@ interface TypesSut {
 
 const partnerResponse =
 {
-  id: 'fd16e644-e57f-4dc6-876e-543c2b4e09a2',
+  id: '1',
   tradingName: 'Adega da Cerveja - Pinheiros',
   ownerName: 'Zé da Silva',
   document: '1432132123891/0001',
@@ -35,6 +31,7 @@ const partnerResponse =
 
 export const partnerToAdd =
 {
+  id: '1',
   tradingName: 'Adega da Cerveja - Pinheiros',
   ownerName: 'Zé da Silva',
   document: '1432132123891/0001',

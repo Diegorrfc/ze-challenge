@@ -20,9 +20,10 @@ export class AddPartnerController implements Controller {
       if (error) {
         return badRequest(error)
       }
-      const { tradingName, ownerName, document, coverageArea, address } = httpRequest.body
+      const { id, tradingName, ownerName, document, coverageArea, address } = httpRequest.body
 
       const partner = await this.addPartner.add({
+        id: id,
         tradingName: tradingName,
         ownerName: ownerName,
         document: document,

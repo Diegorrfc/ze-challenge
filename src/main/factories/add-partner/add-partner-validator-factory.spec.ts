@@ -8,7 +8,7 @@ jest.mock('../../../presentation/controllers/helpers/validators/composite-valida
 
 describe('componentValidationFactory', () => {
   test('Should call CompositeValidator with correct validations', () => {
-    const fields: string[] = ['tradingName', 'ownerName', 'document', 'coverageArea', 'address']
+    const fields: string[] = ['id', 'tradingName', 'ownerName', 'document', 'coverageArea', 'address']
     const componetsValidation: ComponentValidation[] = []
     fields.forEach((fieldName) => componetsValidation.push(new CompositeRequiredField(fieldName)))
 

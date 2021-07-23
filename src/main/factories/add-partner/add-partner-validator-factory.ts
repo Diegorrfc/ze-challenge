@@ -5,7 +5,7 @@ import { CompositeValidator } from '../../../presentation/controllers/helpers/va
 import { CompositeRequiredField } from '../../../presentation/controllers/helpers/validators/composite-required-field'
 
 export const addPartnerValidationFactory = (): ComponentValidation => {
-  const fields: string[] = ['tradingName', 'ownerName', 'document', 'coverageArea', 'address']
+  const fields: string[] = ['id', 'tradingName', 'ownerName', 'document', 'coverageArea', 'address']
   const componetsValidation: ComponentValidation[] = []
   fields.forEach((fieldName) => componetsValidation.push(new CompositeRequiredField(fieldName)))
 

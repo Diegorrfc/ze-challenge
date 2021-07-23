@@ -1,4 +1,5 @@
 export interface AddPartnerModel {
+  id: string
   tradingName: string
   ownerName: string
   document: string
