@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node dist/main/server.js",
-    "build": "tsc",
+    "build": "rimraf dist && tsc",
     "test": "jest --detectOpenHandles",
     "start:dev": "sucrase-node src/main/server.ts"
   },
@@ -28,6 +28,7 @@
     "git-commit-msg-linter": "^3.2.6",
     "husky": "^4.0.7",
     "jest": "^27.0.6",
+    "rimraf": "^3.0.2",
     "sucrase": "^3.20.0",
     "supertest": "^6.1.3",
     "ts-jest": "^27.0.3",
