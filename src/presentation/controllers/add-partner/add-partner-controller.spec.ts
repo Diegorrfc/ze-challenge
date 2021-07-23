@@ -162,11 +162,14 @@ describe('Add partner controller', () => {
         }
       }
     }
-
+    const error = new Error('any_error')
+    error.stack = 'error AddPartnerController' 
     const { addPartnerController, addPartnerStub } = addPartnerControllerSut()
     jest.spyOn(addPartnerStub, 'add').mockRejectedValueOnce(new Error('any_error'))
+    
     const addPartnerResult = await addPartnerController.handle(httpRequest)
-    expect(addPartnerResult).toStrictEqual({ statusCode: 500, body: new ServerError() })
+    
+    expect(addPartnerResult).toStrictEqual({ statusCode: 500, body: new ServerError(error.stack) })
   })
 
   test('Should returns partner created', async () => {

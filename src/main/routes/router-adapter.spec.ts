@@ -43,7 +43,9 @@ describe('Route Adapter', () => {
 
   test('Should return 500 and Server error body message', async () => {
     const controller = controllerStub()
-    jest.spyOn(controller, 'handle').mockResolvedValueOnce(serverError())
+    const error = new Error('any_error')
+    error.stack = 'error Route Adapter' 
+    jest.spyOn(controller, 'handle').mockResolvedValueOnce(serverError(error))
 
     app.post('/testServerErrorAdapter', routeAdapter(controller))
 

@@ -73,8 +73,10 @@ describe('Search Partner controller', () => {
     jest.spyOn(searchStub, 'searchPartner').mockRejectedValueOnce(new Error('any_error'))
     const search = new SearchPartnerController(searchStub)
 
+    const error = new Error('any_error')
+    error.stack = 'error SearchPartnerController' 
     const searchPartnerResult = await search.handle(httpRequest)
-    expect(searchPartnerResult).toStrictEqual({ statusCode: 500, body: new ServerError() })
+    expect(searchPartnerResult).toStrictEqual({ statusCode: 500, body: new ServerError(error.stack) })
   })
 
   test('Should returns notfound when search partner returns undefined', async () => {

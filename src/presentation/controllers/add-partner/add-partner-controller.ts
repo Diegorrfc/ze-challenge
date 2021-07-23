@@ -40,7 +40,7 @@ export class AddPartnerController implements Controller {
       if (error instanceof PartnerAlreadyExists) {
         return badRequest(error)
       }
-      return serverError()
+      return serverError(error)
     }
   }
 }

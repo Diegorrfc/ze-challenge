@@ -27,7 +27,7 @@ export class LoadPartnerByIdController implements Controller {
       }
       return Ok(partner)
     } catch (error) {
-      return serverError()
+      return serverError(error)
     }
   }
 }

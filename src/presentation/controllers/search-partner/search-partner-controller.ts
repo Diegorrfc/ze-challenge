@@ -27,8 +27,7 @@ export class SearchPartnerController implements Controller {
       }
       return Ok(partner)
     } catch (error) {
-      console.log(error)
-      return serverError()
+      return serverError(error)
     }
   }
 }
