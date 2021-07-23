@@ -18,6 +18,6 @@ export class LogDecorator implements Controller {
     if (controllerResponse.statusCode === LogDecorator.httpStatusCodeError) {
       await this.logRepository.log(controllerResponse.body.stack)
     }
-    return Promise.resolve(controllerResponse)
+    return controllerResponse
   }
 }

@@ -1,5 +1,7 @@
 export class MissingField extends Error {
+  errorMessage: string
   constructor(fieldName: string) {
-    super(`Missing field ${fieldName}`)
+    super()
+    this.errorMessage = `Missing field ${fieldName}`
   }
 }

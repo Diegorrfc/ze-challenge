@@ -38,7 +38,7 @@ describe('Route Adapter', () => {
 
     await request(app)
       .post('/testBadAdapter')
-      .expect(400, { message: 'Missing field adapter_test' })
+      .expect(400, { errorMessage: 'Missing field adapter_test' })
   })
 
   test('Should return 500 and Server error body message', async () => {
@@ -51,6 +51,6 @@ describe('Route Adapter', () => {
 
     await request(app)
       .post('/testServerErrorAdapter')
-      .expect(500, { message: 'Server error' })
+      .expect(500, {errorMessage: 'Internal server error' })
   })
 })

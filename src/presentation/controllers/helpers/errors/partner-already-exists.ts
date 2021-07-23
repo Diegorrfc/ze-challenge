@@ -1,5 +1,7 @@
 export class PartnerAlreadyExists extends Error {
+  errorMessage: string
   constructor() {
-    super('Partner already exists')
+    super()
+    this.errorMessage = 'Partner already exists'
   }
 }
