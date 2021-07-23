@@ -6,7 +6,8 @@ export const routeAdapter = (controller: Controller) => {
   return async (req: Request, res: Response) => {
     const httpRequest: HttpRequest = {
       body: req.body,
-      params: req.params
+      params: req.params,
+      query: req.query
     }
     const response = await controller.handle(httpRequest)
     const body = response.statusCode !== 200 ? { message: response.body.message } : response.body

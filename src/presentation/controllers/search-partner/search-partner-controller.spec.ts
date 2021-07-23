@@ -36,7 +36,7 @@ const makeSearchPartnerStub = (): SearchPartner => {
 describe('Search Partner controller', () => {
   test('Should return badRequest if no longitude params is provided', async () => {
     const httpRequest: HttpRequest = {
-      params: { latitude: 20 }
+      query: { latitude: 20 }
     }
     const loadById = new SearchPartnerController(makeSearchPartnerStub())
 
@@ -47,7 +47,7 @@ describe('Search Partner controller', () => {
 
   test('Should return badRequest if no latitude params is provided', async () => {
     const httpRequest: HttpRequest = {
-      params: { longitude: 30 }
+      query: { longitude: 30 }
     }
     const loadById = new SearchPartnerController(makeSearchPartnerStub())
 
@@ -58,7 +58,7 @@ describe('Search Partner controller', () => {
 
   test('Should return 200 if all data is provided', async () => {
     const httpRequest: HttpRequest = {
-      params: { latitude: 20, longitude: 30 }
+      query: { latitude: 20, longitude: 30 }
     }
     const search = new SearchPartnerController(makeSearchPartnerStub())
     const result = await search.handle(httpRequest)
@@ -67,7 +67,7 @@ describe('Search Partner controller', () => {
 
   test('Should returns server error when search partner throws any error', async () => {
     const httpRequest: HttpRequest = {
-      params: { latitude: 20, longitude: 30 }
+      query: { latitude: 20, longitude: 30 }
     }
     const searchStub = makeSearchPartnerStub()
     jest.spyOn(searchStub, 'searchPartner').mockRejectedValueOnce(new Error('any_error'))

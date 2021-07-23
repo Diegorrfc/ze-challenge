@@ -13,7 +13,7 @@ export class SearchPartnerController implements Controller {
 
   async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const params = httpRequest.params
+      const params = httpRequest.query
       if (!params.longitude) {
         return badRequest(new MissingField('longitude'))
       }
@@ -21,9 +21,7 @@ export class SearchPartnerController implements Controller {
         return badRequest(new MissingField('latitude'))
       }
 
-      const longitude = httpRequest.params.longitude
-      const latitude = httpRequest.params.latitude
-      const partner = await this.searchPartnerUseCase.searchPartner(longitude, latitude)
+      const partner = await this.searchPartnerUseCase.searchPartner(params.longitude, params.latitude)
       return Ok(partner)
     } catch (error) {
       console.log(error)
