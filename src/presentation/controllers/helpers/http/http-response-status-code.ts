@@ -15,3 +15,12 @@ export const Ok = (body: any): HttpResponse => ({
   statusCode: 200,
   body: body
 })
+
+export const notFound = (): HttpResponse => ({
+  statusCode: 404
+})
+
+export const created = (body: any): HttpResponse => ({
+  statusCode: 201,
+  body: body
+})

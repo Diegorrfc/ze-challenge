@@ -2,7 +2,7 @@ import { SearchPartner } from '../../../domain/use-cases/interfaces/search-partn
 import { Controller } from '../controller'
 import { MissingField } from '../helpers/errors'
 import { HttpRequest, HttpResponse } from '../helpers/http/http'
-import { badRequest, Ok, serverError } from '../helpers/http/http-response-status-code'
+import { badRequest, notFound, Ok, serverError } from '../helpers/http/http-response-status-code'
 
 export class SearchPartnerController implements Controller {
   private readonly searchPartnerUseCase: SearchPartner
@@ -22,9 +22,11 @@ export class SearchPartnerController implements Controller {
       }
 
       const partner = await this.searchPartnerUseCase.searchPartner(params.longitude, params.latitude)
+      if (!partner) {
+        return notFound()
+      }
       return Ok(partner)
     } catch (error) {
-      console.log(error)
       return serverError()
     }
   }

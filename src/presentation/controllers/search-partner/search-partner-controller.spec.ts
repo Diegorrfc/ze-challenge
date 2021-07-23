@@ -26,8 +26,8 @@ const partnerObject = {
 
 const makeSearchPartnerStub = (): SearchPartner => {
   class SearchPartnerStub implements SearchPartner {
-    async searchPartner(longitude: number, latitude: number): Promise<PartnerModel[]> {
-      return Promise.resolve([partnerObject, partnerObject])
+    async searchPartner(longitude: number, latitude: number): Promise<PartnerModel> {
+      return Promise.resolve(partnerObject)
     }
   }
   return new SearchPartnerStub()
@@ -62,7 +62,7 @@ describe('Search Partner controller', () => {
     }
     const search = new SearchPartnerController(makeSearchPartnerStub())
     const result = await search.handle(httpRequest)
-    expect(result).toStrictEqual(Ok([partnerObject, partnerObject]))
+    expect(result).toStrictEqual(Ok(partnerObject))
   })
 
   test('Should returns server error when search partner throws any error', async () => {
@@ -75,5 +75,17 @@ describe('Search Partner controller', () => {
 
     const searchPartnerResult = await search.handle(httpRequest)
     expect(searchPartnerResult).toStrictEqual({ statusCode: 500, body: new ServerError() })
+  })
+
+  test('Should returns notfound when search partner returns undefined', async () => {
+    const httpRequest: HttpRequest = {
+      query: { latitude: 20, longitude: 30 }
+    }
+    const searchStub = makeSearchPartnerStub()
+    jest.spyOn(searchStub, 'searchPartner').mockResolvedValue(undefined)
+    const search = new SearchPartnerController(searchStub)
+
+    const searchPartnerResult = await search.handle(httpRequest)
+    expect(searchPartnerResult).toStrictEqual({ statusCode: 404 })
   })
 })

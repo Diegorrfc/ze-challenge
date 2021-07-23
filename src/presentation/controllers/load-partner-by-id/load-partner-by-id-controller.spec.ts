@@ -75,4 +75,16 @@ describe('Load Partner by id controller', () => {
     const searchPartnerResult = await loadById.handle(httpRequest)
     expect(searchPartnerResult).toStrictEqual({ statusCode: 500, body: new ServerError() })
   })
+
+  test('Should return notFound when loadPartnerById return undefined', async () => {
+    const httpRequest: HttpRequest = {
+      params: { id: 'Partner' }
+    }
+    const loadPartnerStub = makeLoadPartnerStub()
+    jest.spyOn(loadPartnerStub, 'loadPartnerById').mockResolvedValueOnce(undefined)
+    const loadById = new LoadPartnerByIdController(loadPartnerStub, makeComponentValidation())
+
+    const searchPartnerResult = await loadById.handle(httpRequest)
+    expect(searchPartnerResult).toStrictEqual({ statusCode: 404 })
+  })
 })

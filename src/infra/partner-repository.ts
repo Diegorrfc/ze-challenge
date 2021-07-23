@@ -45,8 +45,8 @@ export class PartnerRepository implements AddPartnerRepository, HasPartnerByDocu
     }
   }
 
-  async searchPartner(longitude: number, latitude: number): Promise<PartnerModel[]> {
-    const connecticut = await PartnerSchemaModel.find({
+  async searchPartner(longitude: number, latitude: number): Promise<PartnerModel> {
+    const partnerNear = await PartnerSchemaModel.find({
       $and: [{
         address:
         {
@@ -71,7 +71,28 @@ export class PartnerRepository implements AddPartnerRepository, HasPartnerByDocu
         }
       }]
     }).lean().exec()
-    console.log(connecticut)
-    return Promise.resolve(null)
+
+    if (partnerNear.length > 0) {
+      return PartnerRepository.mapperPartnerSearch(partnerNear[0])
+    }
+    return undefined
+  }
+
+  private static mapperPartnerSearch(partnerNear: unknown): PartnerModel {
+    const partner = partnerNear as any
+    return {
+      id: partner._id,
+      tradingName: partner.tradingName,
+      ownerName: partner.ownerName,
+      document: partner.document,
+      coverageArea: {
+        type: partner.coverageArea.type,
+        coordinates: partner.coverageArea.coordinates
+      },
+      address: {
+        type: partner.address.type,
+        coordinates: partner.address.coordinates
+      }
+    }
   }
 }

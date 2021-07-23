@@ -2,7 +2,7 @@ import { LoadPartnerById } from '../../../domain/use-cases/interfaces/load-partn
 import { Controller } from '../controller'
 import { MissingField } from '../helpers/errors'
 import { HttpRequest, HttpResponse } from '../helpers/http/http'
-import { badRequest, Ok, serverError } from '../helpers/http/http-response-status-code'
+import { badRequest, notFound, Ok, serverError } from '../helpers/http/http-response-status-code'
 import { ComponentValidation } from '../helpers/validators/component-validation'
 
 export class LoadPartnerByIdController implements Controller {
@@ -22,9 +22,11 @@ export class LoadPartnerByIdController implements Controller {
       }
       const id = httpRequest.params.id
       const partner = await this.loadPartnerByIdUseCase.loadPartnerById(id)
+      if (!partner) {
+        return notFound()
+      }
       return Ok(partner)
     } catch (error) {
-      console.log(error)
       return serverError()
     }
   }

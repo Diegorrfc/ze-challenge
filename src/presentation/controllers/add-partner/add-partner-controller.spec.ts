@@ -6,6 +6,7 @@ import { Controller } from '../controller'
 import { MissingField } from '../helpers/errors'
 import { ServerError } from '../helpers/errors/server-error'
 import { ComponentValidation } from '../helpers/validators/component-validation'
+import { PartnerAlreadyExists } from '../helpers/errors/partner-already-exists'
 
 interface TestTypes {
   addPartnerController: Controller
@@ -116,6 +117,32 @@ describe('Add partner controller', () => {
     expect(spyAddPartner).toHaveBeenCalledWith(httpRequest.body)
   })
 
+  test('Should return badRequest when add partner throws PartnerAlreadyExists', async () => {
+    const httpRequest = {
+      body: {
+        tradingName: 'Adega da Cerveja - Pinheiros',
+        ownerName: 'Zé da Silva',
+        document: '1432132123891/0001',
+        coverageArea: {
+          type: 'MultiPolygon',
+          coordinates: [
+            [[[30, 20], [45, 40], [10, 40], [30, 20]]],
+            [[[15, 5], [40, 10], [10, 20], [5, 10], [15, 5]]]
+          ]
+        },
+        address: {
+          type: 'Point',
+          coordinates: [-46.57421, -21.785741]
+        }
+      }
+    }
+
+    const { addPartnerController, addPartnerStub } = addPartnerControllerSut()
+    jest.spyOn(addPartnerStub, 'add').mockRejectedValueOnce(new PartnerAlreadyExists())
+    const addPartnerResult = await addPartnerController.handle(httpRequest)
+    expect(addPartnerResult).toStrictEqual({ statusCode: 400, body: new PartnerAlreadyExists() })
+  })
+
   test('Should returns server error when add partner throws any error', async () => {
     const httpRequest = {
       body: {
@@ -165,7 +192,7 @@ describe('Add partner controller', () => {
     const { addPartnerController } = addPartnerControllerSut()
     const addPartnerResult = await addPartnerController.handle(httpRequest)
     expect(addPartnerResult).toStrictEqual({
-      statusCode: 200,
+      statusCode: 201,
       body: {
         id: '1',
         tradingName: 'Adega da Cerveja - Pinheiros',

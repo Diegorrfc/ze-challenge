@@ -9,7 +9,7 @@ export class SearchPartnerUseCase implements SearchPartner {
     this.searchPartnerRepository = searchPartnerRepository
   }
 
-  async searchPartner(longitude: number, latitude: number): Promise<PartnerModel[]> {
+  async searchPartner(longitude: number, latitude: number): Promise<PartnerModel> {
     return this.searchPartnerRepository.searchPartner(longitude, latitude)
   }
 }

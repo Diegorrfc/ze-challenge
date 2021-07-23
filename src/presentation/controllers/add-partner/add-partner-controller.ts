@@ -1,7 +1,8 @@
 import { AddPartner } from '../../../domain/use-cases/interfaces/add-partner-interface'
 import { Controller } from '../controller'
+import { PartnerAlreadyExists } from '../helpers/errors/partner-already-exists'
 import { HttpRequest, HttpResponse } from '../helpers/http/http'
-import { badRequest, Ok, serverError } from '../helpers/http/http-response-status-code'
+import { badRequest, created, serverError } from '../helpers/http/http-response-status-code'
 import { ComponentValidation } from '../helpers/validators/component-validation'
 
 export class AddPartnerController implements Controller {
@@ -34,9 +35,11 @@ export class AddPartnerController implements Controller {
           coordinates: address.coordinates
         }
       })
-      return Ok(partner)
+      return created(partner)
     } catch (error) {
-      console.log(error)
+      if (error instanceof PartnerAlreadyExists) {
+        return badRequest(error)
+      }
       return serverError()
     }
   }

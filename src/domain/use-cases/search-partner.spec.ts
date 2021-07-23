@@ -28,10 +28,8 @@ const partnerResponse =
 
 const makeSearchPartner = (): SearchPartnerRepository => {
   class SearchPartnerStub implements SearchPartnerRepository {
-    async searchPartner(longitude: number, latitude: number): Promise<PartnerModel[]> {
-      return Promise.resolve(
-        [partnerResponse, partnerResponse]
-      )
+    async searchPartner(longitude: number, latitude: number): Promise<PartnerModel> {
+      return Promise.resolve(partnerResponse)
     }
   }
   return new SearchPartnerStub()
@@ -74,15 +72,15 @@ describe('SearchPartnerUseCase', () => {
 
     const result = await searchPartnerUseCase.searchPartner(coordinates.longitude, coordinates.latitude)
 
-    expect(result).toStrictEqual([partner, partner])
+    expect(result).toStrictEqual(partner)
   })
 
   test('Should return empty partner', async () => {
     const { searchPartnerUseCase, searchPartnerRepository } = makeDbPartnerSut()
-    jest.spyOn(searchPartnerRepository, 'searchPartner').mockResolvedValueOnce([])
+    jest.spyOn(searchPartnerRepository, 'searchPartner').mockResolvedValueOnce(undefined)
     const result = await searchPartnerUseCase.searchPartner(coordinates.longitude, coordinates.latitude)
 
-    expect(result).toStrictEqual([])
+    expect(result).toStrictEqual(undefined)
   })
 
   test('Should throw error when searchPartner throw error', async () => {

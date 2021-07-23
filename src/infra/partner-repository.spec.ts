@@ -99,7 +99,7 @@ describe('Partner Repository', () => {
     })
   })
 
-  describe('Load Partner By Id', () => {
+  describe('Search Partner', () => {
     test('Should call find with correct values', async () => {
       const longitude = 30
       const latitude = 20
@@ -131,6 +131,29 @@ describe('Partner Repository', () => {
           }
         }]
       })
+    })
+
+    test('Should return value when found partner', async () => {
+      const findReturn = {
+        _id: 'id_unique',
+        tradingName: 'Adega da Cerveja - Pinheiros',
+        ownerName: 'Zé da Silva',
+        document: '1432132123891/0001',
+        coverageArea: {
+          type: 'MultiPolygon',
+          coordinates: [
+            [[[30, 20], [45, 40], [10, 40], [30, 20]]],
+            [[[15, 5], [40, 10], [10, 20], [5, 10], [15, 5]]]
+          ]
+        },
+        address: {
+          type: 'Point',
+          coordinates: [-46.57421, -21.785741]
+        }
+      }
+      jest.mock('./mongodb/helpers/partner-schema', () => ({
+        find: () => findReturn
+      }))
     })
   })
 })
