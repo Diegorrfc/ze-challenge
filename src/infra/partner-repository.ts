@@ -56,20 +56,31 @@ export class PartnerRepository implements AddPartnerRepository, HasPartnerByDocu
 
   async searchPartner(longitude: number, latitude: number): Promise<PartnerModel[]> {
     const connecticut = await PartnerSchemaModel.find({
-      address:
-      {
-        $near:
+      $and: [{
+        address:
         {
-          $geometry: {
-            type: 'Point',
-            coordinates: [longitude, latitude]
+          $near:
+          {
+            $geometry: {
+              type: 'Point',
+              coordinates: [longitude, latitude]
+            }
           }
         }
-      }
+      }, {
+        coverageArea:
+        {
+          $geoIntersects:
+          {
+            $geometry: {
+              type: 'Point',
+              coordinates: [longitude, latitude]
+            }
+          }
+        }
+      }]
     }).lean().exec()
-    console.log('inic connecticut')
     console.log(connecticut)
-    console.log('inic connecticut')
     return Promise.resolve(null)
   }
 }
