@@ -1,7 +1,7 @@
 import { MissingField } from '../errors'
 import { ComponentValidation } from './component-validation'
 
-export class CompositeBodyRequiredField implements ComponentValidation {
+export class CompositeRequiredField implements ComponentValidation {
   private readonly fieldName: string
   constructor(fieldName: string) {
     this.fieldName = fieldName

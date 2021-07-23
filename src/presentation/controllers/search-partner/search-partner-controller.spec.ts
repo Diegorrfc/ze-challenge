@@ -1,9 +1,9 @@
 import { PartnerModel } from '../../../domain/models/partner-model'
 import { SearchPartner } from '../../../domain/use-cases/interfaces/search-partner-interface'
-import { MissingField } from '../helpers/errors'
 import { ServerError } from '../helpers/errors/server-error'
 import { HttpRequest } from '../helpers/http/http'
 import { badRequest, Ok } from '../helpers/http/http-response-status-code'
+import { ComponentValidation } from '../helpers/validators/component-validation'
 import { SearchPartnerController } from './search-partner-controller'
 
 const partnerObject = {
@@ -33,34 +33,32 @@ const makeSearchPartnerStub = (): SearchPartner => {
   return new SearchPartnerStub()
 }
 
+const makeComponentValidationStub = (): ComponentValidation => {
+  class ComponentValidationStub implements ComponentValidation {
+    validate(request: any): Error {
+      return undefined
+    }
+  }
+  return new ComponentValidationStub()
+}
+
 describe('Search Partner controller', () => {
-  test('Should return badRequest if no longitude params is provided', async () => {
+  test('Should return error when composite validator returns error', async () => {
     const httpRequest: HttpRequest = {
-      query: { latitude: 20 }
+      query: { latitude: 20, longitude: 30 }
     }
-    const loadById = new SearchPartnerController(makeSearchPartnerStub())
-
-    const result = await loadById.handle(httpRequest)
-
-    expect(result).toStrictEqual(badRequest(new MissingField('longitude')))
-  })
-
-  test('Should return badRequest if no latitude params is provided', async () => {
-    const httpRequest: HttpRequest = {
-      query: { longitude: 30 }
-    }
-    const loadById = new SearchPartnerController(makeSearchPartnerStub())
-
-    const result = await loadById.handle(httpRequest)
-
-    expect(result).toStrictEqual(badRequest(new MissingField('latitude')))
+    const validationComposite = makeComponentValidationStub()
+    jest.spyOn(validationComposite, 'validate').mockReturnValue(new Error())
+    const search = new SearchPartnerController(makeSearchPartnerStub(), validationComposite)
+    const result = await search.handle(httpRequest)
+    expect(result).toStrictEqual(badRequest(new Error()))
   })
 
   test('Should return 200 if all data is provided', async () => {
     const httpRequest: HttpRequest = {
       query: { latitude: 20, longitude: 30 }
     }
-    const search = new SearchPartnerController(makeSearchPartnerStub())
+    const search = new SearchPartnerController(makeSearchPartnerStub(), makeComponentValidationStub())
     const result = await search.handle(httpRequest)
     expect(result).toStrictEqual(Ok(partnerObject))
   })
@@ -71,10 +69,10 @@ describe('Search Partner controller', () => {
     }
     const searchStub = makeSearchPartnerStub()
     jest.spyOn(searchStub, 'searchPartner').mockRejectedValueOnce(new Error('any_error'))
-    const search = new SearchPartnerController(searchStub)
+    const search = new SearchPartnerController(searchStub, makeComponentValidationStub())
 
     const error = new Error('any_error')
-    error.stack = 'error SearchPartnerController' 
+    error.stack = 'error SearchPartnerController'
     const searchPartnerResult = await search.handle(httpRequest)
     expect(searchPartnerResult).toStrictEqual({ statusCode: 500, body: new ServerError(error.stack) })
   })
@@ -85,7 +83,7 @@ describe('Search Partner controller', () => {
     }
     const searchStub = makeSearchPartnerStub()
     jest.spyOn(searchStub, 'searchPartner').mockResolvedValue(undefined)
-    const search = new SearchPartnerController(searchStub)
+    const search = new SearchPartnerController(searchStub, makeComponentValidationStub())
 
     const searchPartnerResult = await search.handle(httpRequest)
     expect(searchPartnerResult).toStrictEqual({ statusCode: 404 })

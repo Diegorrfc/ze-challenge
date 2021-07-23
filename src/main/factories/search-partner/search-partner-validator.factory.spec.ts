@@ -1,16 +1,19 @@
 import { ComponentValidation } from '../../../presentation/controllers/helpers/validators/component-validation'
 import { CompositeRequiredField } from '../../../presentation/controllers/helpers/validators/composite-required-field'
 import { CompositeValidator } from '../../../presentation/controllers/helpers/validators/composite-validator'
-import { loadPartnerByIdValidationFactory } from './load-partner-by-id-validator.factory'
+import { CoordinatorValidator } from '../../../presentation/controllers/helpers/validators/search-partner-request/composite-coordinator-validator'
+import { searchPartneValidationFactory } from './search-partner-validator.factory'
+
 jest.mock('../../../presentation/controllers/helpers/validators/composite-validator')
 
-describe('loadPartnerByIdValidationFactory', () => {
+describe('searchPartneValidationFactory', () => {
   test('Should call CompositeValidator with correct validations', () => {
+    const fields: string[] = ['longitude', 'latitude']
     const componetsValidation: ComponentValidation[] = []
-    componetsValidation.push(new CompositeRequiredField('id'))
+    fields.forEach((fieldName) => componetsValidation.push(new CompositeRequiredField(fieldName)))
+    componetsValidation.push(new CoordinatorValidator())
 
-    loadPartnerByIdValidationFactory()
-
+    searchPartneValidationFactory()
     expect(CompositeValidator).toHaveBeenCalledWith(componetsValidation)
   })
 })
