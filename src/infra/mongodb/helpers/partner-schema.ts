@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+
 const coverageAreaSchema = new mongoose.Schema({
   _id: false,
   type: {
@@ -35,5 +36,5 @@ const partnerSchema = new mongoose.Schema({
 }, { _id: false })
 
 const partnerSchemaModel = mongoose.model('Partner', partnerSchema)
-partnerSchemaModel.createIndexes()
+
 export default partnerSchemaModel

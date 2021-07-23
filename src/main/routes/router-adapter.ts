@@ -10,7 +10,7 @@ export const routeAdapter = (controller: Controller) => {
       query: req.query
     }
     const response = await controller.handle(httpRequest)
-    const body = response.statusCode !== 200 ? { message: response.body.message } : response.body
+    const body = response.statusCode !== 200 ? { message: response.body?.message } : response.body
     res.status(response.statusCode).send(body)
   }
 }
