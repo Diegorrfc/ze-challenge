@@ -3,19 +3,19 @@ Requirements to run this project: You need to have node.js and mongodb installed
 ## Steps to run and build the project
 
 ## 1 - Install Dependencies;
-    comand: npm i
+    command: npm i
 
 ### 1.1 - Run locally;
-    comand: npm run start:dev 
+    command: npm run start:dev 
 
 ### 1.2 - Build to deploy;
     comand: npm run build.
-    The comand gonna generater file to deploy at folder /dist
+    The command gonna generater file to deploy at folder /dist
 
 ### 1.3 - Run Unit Test;
-    comand: npm run test
+    command: npm run test
 
-## 2 Requets;
+## 2 Requests;
 
 ### 2.1 Create a partner: 
         method: post, link; http://localhost:5050/partners 
