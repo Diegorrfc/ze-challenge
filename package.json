@@ -7,7 +7,7 @@
     "start": "node dist/main/server.js",
     "build": "rimraf dist && tsc",
     "test": "jest --detectOpenHandles",
-    "start:dev": "sucrase-node src/main/server.ts"
+    "start:dev": "ts-node src/main/server.ts"
   },
   "keywords": [],
   "author": "Diego Felix",
