@@ -59,6 +59,6 @@ Note: The uri for date base is at main/config/db-connection.ts
 
 ### What is mutation testing?
     'Bugs, or mutants, are automatically inserted into your production code. Your tests are run for each mutant. If your tests fail then the mutant is killed. If     your tests passed, the mutant survived. The higher the percentage of mutants killed, the more effective your tests are.'    
-   [stryke](https://stryker-mutator.io/docs/)
+   (https://stryker-mutator.io/docs/)
 
 ![Screen Shot 2021-07-24 at 07 55 23](https://user-images.githubusercontent.com/11844937/126866349-6d789a07-c977-4079-b462-d622e977dbc7.png)
