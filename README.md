@@ -14,7 +14,10 @@ Requirements to run this project: You need to have node.js and mongodb installed
 
 ### 1.3 - Run Unit Test;
     command: npm run test
-
+    
+### 1.3 - Run Mutation Test;
+    command: npm run test:mutation
+    
 ## 2 Requests;
 
 ### 2.1 Create a partner: 
@@ -48,6 +51,14 @@ Requirements to run this project: You need to have node.js and mongodb installed
 
 Note: The uri for date base is at main/config/db-connection.ts 
 
-Unit test report
+## Unit test report
 
 ![Screen Shot 2021-07-23 at 06 53 01](https://user-images.githubusercontent.com/11844937/126766585-6adabbf3-4b67-44cc-8ec9-123f197c3ec4.png)
+
+## Muutation test report
+
+### What is mutation testing?
+    'Bugs, or mutants, are automatically inserted into your production code. Your tests are run for each mutant. If your tests fail then the mutant is killed. If     your tests passed, the mutant survived. The higher the percentage of mutants killed, the more effective your tests are.'
+    https://stryker-mutator.io/docs/
+
+![Screen Shot 2021-07-24 at 07 55 23](https://user-images.githubusercontent.com/11844937/126866349-6d789a07-c977-4079-b462-d622e977dbc7.png)
